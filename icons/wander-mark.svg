@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title>Wander mark</title>
+  <rect width="128" height="128" rx="26" fill="#efe5d4"/>
+  <path fill="#171511" d="M32 18h64v92L64 89 32 110V18Z"/>
+  <path fill="#efe5d4" d="M45 36h33v11H45zM45 58h20v11H45z"/>
+  <path fill="#d9bf65" d="M85 18h11v92L85 103V18Z"/>
+</svg>
