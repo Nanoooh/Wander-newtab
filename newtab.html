@@ -9,11 +9,11 @@
     *, *::before, *::after { box-sizing: border-box; }
 
     :root {
-      --canvas: oklch(93% 0.026 82);
+      --canvas: #ffffff;
       --canvas-ink: oklch(17% 0.013 72);
       --ink-soft: oklch(35% 0.017 72 / 0.68);
       --ink-faint: oklch(40% 0.014 72 / 0.44);
-      --paper: oklch(96% 0.018 86);
+      --paper: #ffffff;
       --rule: oklch(33% 0.012 72 / 0.14);
       --shadow: 0 18px 50px oklch(30% 0.014 72 / 0.10), 0 2px 8px oklch(30% 0.014 72 / 0.08);
       --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -30,10 +30,7 @@
       min-width: 320px;
       min-height: 100vh;
       margin: 0;
-      background:
-        radial-gradient(circle at 18% 12%, oklch(100% 0 0 / 0.34), transparent 24rem),
-        linear-gradient(135deg, oklch(88% 0.028 72 / 0.40), transparent 42%),
-        var(--canvas);
+      background: var(--canvas);
       color: var(--canvas-ink);
       font-family: "Aptos", "Segoe UI", system-ui, sans-serif;
       overflow: hidden;
