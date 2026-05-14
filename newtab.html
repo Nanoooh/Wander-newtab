@@ -253,16 +253,16 @@
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: var(--lines, 4);
+      max-height: calc(var(--lines, 4) * 1.25em);
       overflow-wrap: break-word;
       word-break: break-word;
       hyphens: auto;
       transform: scale(var(--title-scale, 1));
       transform-origin: top left;
-      padding: 0.05em 0;
     }
-    .folder { font-size: clamp(9px, 0.78vw, 11px); text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--canvas-ink); }
-    .domain { font-size: clamp(9px, 0.78vw, 11px); opacity: 0.6; color: var(--canvas-ink); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-    .number { font-size: clamp(9px, 0.78vw, 11px); opacity: 0.6; font-variant-numeric: tabular-nums; color: var(--canvas-ink); }
+    .folder { font-size: clamp(9px, 0.78vw, 11px); text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--canvas-ink); }
+    .domain { font-size: clamp(9px, 0.78vw, 11px); opacity: 0.75; color: var(--canvas-ink); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+    .number { font-size: clamp(9px, 0.78vw, 11px); opacity: 0.9; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--canvas-ink); }
     .icon { font-size: 12px; color: var(--canvas-ink); }
     
     .site-mark {
@@ -309,9 +309,9 @@
 
     /* --- 4. Magazine Split --- */
     .l-magazine .bm-content-layer { padding: 0; }
-    .l-magazine .top-half { height: 38%; background: color-mix(in oklch, var(--canvas-ink) 8%, transparent); position: relative; }
+    .l-magazine .top-half { height: 32%; background: color-mix(in oklch, var(--canvas-ink) 8%, transparent); position: relative; }
     .l-magazine .top-half .number { position: absolute; top: 16px; right: 16px; font-size: clamp(34px, 4vw, 48px); font-family: 'Playfair Display', serif; opacity: 0.2; }
-    .l-magazine .bottom-half { padding: clamp(12px, 1.45vw, 24px); display: flex; flex-direction: column; height: 62%; min-height: 0; overflow: hidden; box-sizing: border-box; }
+    .l-magazine .bottom-half { padding: clamp(10px, 1.45vw, 24px); display: flex; flex-direction: column; height: 68%; min-height: 0; overflow: hidden; box-sizing: border-box; }
     .l-magazine .title { font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
     .bookmark.l-magazine[data-size="hero"] .title { -webkit-line-clamp: 2; }
     .bookmark.l-magazine[data-size="wide"] .title { -webkit-line-clamp: 2; }
@@ -392,47 +392,47 @@
 
     /* --- 14. Diagonal Split --- */
     .l-diagonal .bm-content-layer { padding: 0; }
-    .l-diagonal .top-poly { height: 40%; background: var(--canvas-ink); color: var(--card-bg); padding: clamp(14px, 1.45vw, 24px); clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%); }
+    .l-diagonal .top-poly { height: 32%; background: var(--canvas-ink); color: var(--card-bg); padding: clamp(10px, 1.45vw, 20px); clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%); }
     .l-diagonal .title { font-weight: 800; }
-    .bookmark.l-diagonal[data-size="hero"] .title { -webkit-line-clamp: 3; }
-    .bookmark.l-diagonal[data-size="wide"] .title { -webkit-line-clamp: 3; }
-    .bookmark.l-diagonal[data-size="tall"] .title { -webkit-line-clamp: 3; }
+    .bookmark.l-diagonal[data-size="hero"] .title { -webkit-line-clamp: 2; font-size: clamp(28px, min(4vw, 7vh), 56px); line-height: 1.15; }
+    .bookmark.l-diagonal[data-size="wide"] .title { -webkit-line-clamp: 2; font-size: clamp(22px, min(2.8vw, 6vh), 44px); line-height: 1.15; }
+    .bookmark.l-diagonal[data-size="tall"] .title { -webkit-line-clamp: 2; font-size: clamp(20px, min(2.4vw, 5.5vh), 40px); line-height: 1.15; }
     .bookmark.l-diagonal[data-size="small"] .title { -webkit-line-clamp: 2; }
     .bookmark.l-diagonal[data-size="strip"] .title { -webkit-line-clamp: 2; }
-    .l-diagonal .top-poly .number { color: var(--card-bg); }
-    .l-diagonal .bottom-poly { padding: clamp(14px, 1.45vw, 24px); display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; min-height: 0; overflow: hidden; }
+    .l-diagonal .top-poly .number { color: var(--card-bg); font-size: clamp(14px, 2.5vh, 24px); font-weight: 800; opacity: 1; line-height: 1; }
+    .l-diagonal .bottom-poly { padding: clamp(8px, 1.2vw, 18px); display: flex; flex-direction: column; justify-content: flex-start; flex-grow: 1; min-height: 0; overflow: hidden; }
 
     /* Removed Swiss Grid */
 
     /* Override sizing constraints for certain layouts */
     .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
-      font-size: clamp(34px, 5.6vw, 84px);
+      font-size: clamp(34px, min(5.6vw, 9vh), 84px);
       line-height: 1.15;
       letter-spacing: -0.052em;
       -webkit-line-clamp: 3;
     }
 
     .bookmark[data-size="wide"] .title {
-      font-size: clamp(25px, 3.2vw, 54px);
+      font-size: clamp(25px, min(3.2vw, 6.5vh), 54px);
       line-height: 1.2;
       letter-spacing: -0.043em;
     }
 
     .bookmark[data-size="tall"] .title {
-      font-size: clamp(23px, 2.8vw, 46px);
+      font-size: clamp(23px, min(2.8vw, 6vh), 46px);
       line-height: 1.2;
       letter-spacing: -0.038em;
     }
 
     .bookmark[data-size="small"] .title {
-      font-size: clamp(14px, 1.8vw, 24px);
+      font-size: clamp(14px, min(1.8vw, 4vh), 24px);
       line-height: 1.25;
       letter-spacing: -0.03em;
       -webkit-line-clamp: 4;
     }
 
     .bookmark[data-size="strip"] .title {
-      font-size: clamp(14px, 2vw, 28px);
+      font-size: clamp(14px, min(2vw, 5vh), 28px);
       line-height: 1.1;
       letter-spacing: -0.032em;
       -webkit-line-clamp: 2;
@@ -799,7 +799,7 @@
     .bookmark.is-dark-card .folder,
     .bookmark.is-dark-card .domain,
     .bookmark.is-dark-card .issue {
-      color: rgba(245, 240, 232, 0.55);
+      color: rgba(245, 240, 232, 0.85);
     }
 
     /* Heavy-header layout: folder is on colored header, not on card bg */
@@ -827,7 +827,7 @@
     .bookmark.is-light-card .folder,
     .bookmark.is-light-card .domain,
     .bookmark.is-light-card .issue {
-      color: rgba(26, 26, 26, 0.55);
+      color: rgba(26, 26, 26, 0.85);
     }
 
     .bookmark.is-light-card .title {

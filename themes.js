@@ -211,16 +211,6 @@ const THEMES = {
     cssVars: { '--canvas': '#060507', '--canvas-ink': '#F5EDF1', '--ink-soft': 'rgba(245,237,241,0.60)', '--ink-faint': 'rgba(245,237,241,0.35)', '--paper': '#0C0A10', '--rule': 'rgba(245,237,241,0.06)', '--shadow': '0 0 20px rgba(237,61,140,0.12)', '--card-radius': '0px', '--card-border': '1px solid rgba(237,61,140,0.20)' },
     neonAccents: ['#ED3D8C', '#FF66A8', '#B81D67', '#ED3D8C', '#FF66A8', '#B81D67'],
   },
-  studio: {
-    name: 'Studio',
-    scheme: 'dark', layout: 'l-heavy-header', type: 'hinge',
-    preview: ['#F5D200', '#1C1C1C', '#242422', '#3A3A36', '#F5D200', '#141414'],
-    fonts: { display: 'system-ui, sans-serif', body: 'system-ui, sans-serif' },
-    fontUrls: [],
-    palette: ['#1C1C1C', '#242422', '#2A2A28', '#202020', '#181818', '#F5D200'],
-    cssVars: { '--canvas': '#1C1C1C', '--canvas-ink': '#F5D200', '--ink-soft': 'rgba(245,210,0,0.60)', '--ink-faint': 'rgba(245,210,0,0.35)', '--paper': '#242422', '--rule': 'rgba(245,210,0,0.08)', '--shadow': '0 0 24px rgba(245,210,0,0.10)', '--card-radius': '0px', '--card-border': '2px solid rgba(245,210,0,0.25)' },
-    neonAccents: ['#F5D200', '#F5D200', '#F5D200', '#F5D200', '#F5D200', '#F5D200'],
-  },
   vellum: {
     name: 'Vellum',
     scheme: 'dark', layout: 'l-index', type: 'split',
@@ -250,16 +240,6 @@ const THEMES = {
     fontUrls: ['https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Instrument+Serif&display=swap'],
     palette: ['#F2B6C6', '#F2D86A', '#7A1F35', '#F2B6C6', '#F2D86A', '#7A1F35'],
     cssVars: { '--canvas': '#F2D86A', '--canvas-ink': '#7A1F35', '--ink-soft': 'rgba(122,31,53,0.60)', '--ink-faint': 'rgba(122,31,53,0.35)', '--paper': '#F2D86A', '--rule': 'rgba(122,31,53,0.10)', '--shadow': '0 4px 12px rgba(122,31,53,0.10)', '--card-radius': '0px', '--card-border': 'none' },
-  },
-  grove: {
-    name: 'Grove',
-    scheme: 'mixed', layout: 'l-magazine', type: 'iris',
-    preview: ['#D4CFBF', '#192B1B', '#C8524A', '#E8E4D6', '#1E3221', '#2A3E2C'],
-    fonts: { display: '"Playfair Display", "Playfair Display Fallback", Georgia, serif', body: '"Jost", "Jost Fallback", system-ui, sans-serif' },
-    fontUrls: ['https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Jost:wght@400;500;600&display=swap'],
-    palette: ['#192B1B', '#1E3221', '#2A3E2C', '#C8524A', '#E8E4D6', '#243826'],
-    cssVars: { '--canvas': '#192B1B', '--canvas-ink': '#D4CFBF', '--ink-soft': 'rgba(212,207,191,0.60)', '--ink-faint': 'rgba(212,207,191,0.35)', '--paper': '#1E3221', '--rule': 'rgba(212,207,191,0.06)', '--shadow': '0 0 20px rgba(200,82,74,0.08)', '--card-radius': '0px', '--card-border': '1px solid rgba(212,207,191,0.08)' },
-    neonAccents: ['#C8524A', '#D4CFBF', '#E8E4D6', '#C8524A', '#D4CFBF', '#E8E4D6'],
   },
   mat: {
     name: 'Mat',
@@ -291,6 +271,6 @@ const THEME_ORDER = [
   'neo-grid-bold', 'creative-mode', 'block-frame', 'bold-poster', 'raw-grid', 'peoples-platform',
   'capsule', 'daisy-days', 'scatterbrain', 'retro-zine',
   'pin-and-paper', 'retro-windows', 'sakura-chroma', 'stencil-tablet', 'cobalt-grid',
-  'broadside', 'pink-script', 'studio', 'vellum',
-  'coral', 'editorial-tri-tone', 'grove', 'signal',
+  'broadside', 'pink-script', 'vellum',
+  'coral', 'editorial-tri-tone', 'signal',
 ];

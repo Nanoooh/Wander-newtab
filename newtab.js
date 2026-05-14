@@ -333,7 +333,7 @@ function buildCards(grid, picks, colors, layout, mode) {
         contentHtml = `<div class="folder">${fFolder}.${num}</div><div class="title">${fTitle}</div><div class="bottom">${fDomain}</div>`;
         break;
       case 'l-diagonal':
-        contentHtml = `<div class="top-poly"><div class="number" style="font-size:24px; font-weight:800; opacity:1;">${num}</div></div><div class="bottom-poly"><div class="title">${fTitle}</div><div class="folder" style="margin-top:auto; opacity:0.6;">${fFolder}</div><div class="domain" style="margin-top:4px;">${fDomain}</div></div>`;
+        contentHtml = `<div class="top-poly"><div class="number">${num}</div></div><div class="bottom-poly"><div class="title">${fTitle}</div><div class="folder" style="margin-top:auto; opacity:0.6;">${fFolder}</div><div class="domain" style="margin-top:4px;">${fDomain}</div></div>`;
         break;
       case 'l-classic':
       default:
