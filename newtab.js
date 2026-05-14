@@ -101,9 +101,15 @@ function loadTheme(callback) {
     chrome.storage.local.get([STORAGE_KEY, 'wander-random-theme'], (result) => {
       let key = result[STORAGE_KEY] || DEFAULT_THEME;
       
-      if (result['wander-random-theme'] === true) {
+      // Default to random theme if not explicitly set to false
+      const isRandomEnabled = result['wander-random-theme'] !== false;
+      
+      if (isRandomEnabled) {
         const THEME_ORDER = Object.keys(THEMES);
         key = THEME_ORDER[Math.floor(Math.random() * THEME_ORDER.length)];
+        // We don't necessarily want to save this random key as the "current" theme 
+        // if we want it to stay random on every refresh, but the current logic does it.
+        // I will keep it as is to avoid changing behavior other than the default.
         chrome.storage.local.set({ [STORAGE_KEY]: key });
       }
       
@@ -343,6 +349,13 @@ function buildCards(grid, picks, colors, layout, mode) {
         mark.style.background = neonColor;
         mark.style.color = isColorDark(neonColor) ? '#F5F0E8' : '#0A0A0A';
       }
+    }
+
+    // Dynamic font-size adjustment for very long titles
+    if (bookmark.title && bookmark.title.length > 70) {
+      const scale = Math.max(0.75, 1 - (bookmark.title.length - 70) * 0.002);
+      link.style.setProperty('--title-scale', scale.toFixed(2));
+      link.classList.add('has-long-title');
     }
 
     grid.appendChild(link);

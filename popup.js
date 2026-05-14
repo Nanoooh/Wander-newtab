@@ -11,7 +11,7 @@
     if (storage) {
       storage.get([STORAGE_KEY, 'wander-random-theme'], (result) => {
         const current = result[STORAGE_KEY] || DEFAULT_THEME;
-        const isRandom = result['wander-random-theme'] === true;
+        const isRandom = result['wander-random-theme'] !== false;
         randomToggle.checked = isRandom;
         buildList(list, current, isInitial);
       });

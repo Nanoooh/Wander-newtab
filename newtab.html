@@ -226,7 +226,7 @@
 
     /* ---------- CORE ELEMENTS ---------- */
     .title {
-      font-size: 24px; font-weight: 600; line-height: 1.1;
+      font-size: 24px; font-weight: 600; line-height: 1.25;
       max-width: 100%;
       font-family: var(--display-font);
       color: var(--canvas-ink);
@@ -235,6 +235,12 @@
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: var(--lines, 4);
+      overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
+      transform: scale(var(--title-scale, 1));
+      transform-origin: top left;
+      padding: 0.05em 0;
     }
     .folder { font-size: clamp(9px, 0.78vw, 11px); text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--canvas-ink); }
     .domain { font-size: clamp(9px, 0.78vw, 11px); opacity: 0.6; color: var(--canvas-ink); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
@@ -261,8 +267,13 @@
     /* --- 1. Classic Balanced --- */
     .l-classic .bm-content-layer { padding: clamp(14px, 1.45vw, 24px) clamp(14px, 1.45vw, 24px) clamp(20px, 2vw, 32px); }
     .l-classic .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
-    .l-classic .mid { margin: auto 0; }
+    .l-classic .mid { margin: auto 0; flex-grow: 1; display: flex; align-items: center; }
     .l-classic .bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; }
+
+    .bookmark[data-size="small"] .l-classic .bm-content-layer,
+    .bookmark[data-size="strip"] .l-classic .bm-content-layer {
+      padding: 12px 14px 16px 14px;
+    }
 
     /* --- 2. Minimalist Bottom --- */
     .l-minimal .bm-content-layer { padding: 32px 24px 24px 24px; justify-content: flex-end; }
@@ -283,8 +294,15 @@
     .l-magazine .top-half { height: 45%; background: color-mix(in oklch, var(--canvas-ink) 8%, transparent); position: relative; }
     .l-magazine .top-half .number { position: absolute; top: 16px; right: 16px; font-size: clamp(34px, 4vw, 48px); font-family: 'Playfair Display', serif; opacity: 0.2; }
     .l-magazine .bottom-half { padding: 24px; display: flex; flex-direction: column; height: 55%; box-sizing: border-box; }
-    .l-magazine .title { font-family: 'Playfair Display', serif; font-weight: 600; }
+    .l-magazine .title { font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
     .l-magazine .folder { margin-top: auto; opacity: 1; font-weight: 600; }
+
+    .bookmark[data-size="small"] .l-magazine .top-half,
+    .bookmark[data-size="strip"] .l-magazine .top-half { height: 30%; }
+    .bookmark[data-size="small"] .l-magazine .top-half .number,
+    .bookmark[data-size="strip"] .l-magazine .top-half .number { top: 8px; right: 10px; font-size: 24px; }
+    .bookmark[data-size="small"] .l-magazine .bottom-half,
+    .bookmark[data-size="strip"] .l-magazine .bottom-half { height: 70%; padding: 16px; }
 
     /* --- 5. Brutalist Borders --- */
     .l-brutalist .bm-content-layer { padding: 24px; gap: 16px; }
@@ -301,10 +319,22 @@
     .l-bento .c-title .title { color: var(--card-bg); }
     .l-bento .c-title .domain { color: var(--card-bg); margin-top: auto; opacity: 0.6; }
 
+    .bookmark[data-size="small"] .l-bento .bm-content-layer,
+    .bookmark[data-size="strip"] .l-bento .bm-content-layer { padding: 8px; gap: 6px; }
+    .bookmark[data-size="small"] .l-bento .cell,
+    .bookmark[data-size="strip"] .l-bento .cell { padding: 10px; border-radius: 4px; }
+    .bookmark[data-size="small"] .l-bento .c-number,
+    .bookmark[data-size="strip"] .l-bento .c-number { font-size: 16px; }
+
     /* --- 9. Typographic Poster --- */
     .l-poster .bm-content-layer { padding: 24px; }
-    .l-poster .title { font-family: 'Bebas Neue', "PingFang SC", "Microsoft YaHei", sans-serif; font-size: clamp(38px, 6vw, 64px); line-height: 0.85; text-transform: uppercase; word-break: break-all; }
+    .l-poster .title { font-family: 'Bebas Neue', "PingFang SC", "Microsoft YaHei", sans-serif; font-size: clamp(38px, 6vw, 64px); line-height: 1.05; text-transform: uppercase; word-break: break-all; padding: 0.1em 0; }
     .l-poster .meta { position: absolute; right: 16px; bottom: 24px; writing-mode: vertical-rl; display: flex; gap: 16px; }
+
+    .bookmark[data-size="small"] .l-poster .title,
+    .bookmark[data-size="strip"] .l-poster .title { font-size: clamp(24px, 4vw, 36px); line-height: 1.1; }
+    .bookmark[data-size="small"] .l-poster .meta,
+    .bookmark[data-size="strip"] .l-poster .meta { right: 8px; bottom: 12px; gap: 8px; }
 
     /* --- 11. Floating Badge --- */
     .l-badge .bm-content-layer { padding: 32px 24px; justify-content: flex-end; }
@@ -315,16 +345,21 @@
     .l-terminal .bm-content-layer { padding: 24px; font-family: 'Space Mono', monospace; border-radius: 0; }
     .l-terminal .folder { opacity: 1; text-transform: none; letter-spacing: 0; margin-bottom: 16px; }
     .l-terminal .folder::before { content: "root@wander:~# cd "; opacity: 0.6; }
-    .l-terminal .title { font-family: 'Space Mono', monospace; font-weight: 400; margin-bottom: 24px; line-height: 1.4; font-size: clamp(14px, 2vw, 18px); }
+    .l-terminal .title { font-family: 'Space Mono', monospace; font-weight: 400; margin-bottom: 24px; line-height: 1.5; font-size: clamp(14px, 2vw, 18px); }
     .l-terminal .title::before { content: "> "; opacity: 0.6; }
     .l-terminal .domain { opacity: 0.5; }
     .l-terminal .domain::before { content: "[LINK] "; }
 
     /* --- 13. Index Card --- */
-    .l-index .bm-content-layer { padding: 32px 24px; background-image: repeating-linear-gradient(transparent, transparent 27px, color-mix(in oklch, var(--canvas-ink) 15%, transparent) 28px); border-radius: 2px; }
-    .l-index .folder { font-family: 'Space Mono', monospace; margin-bottom: 32px; opacity: 1; display: inline-block; }
-    .l-index .title { font-family: 'Caveat', "Kaiti SC", "STKaiti", cursive, serif; font-size: clamp(32px, 4vw, 42px); font-weight: 600; line-height: 1.2; }
+    .l-index .bm-content-layer { padding: 18px 24px; background-image: repeating-linear-gradient(transparent, transparent 27px, color-mix(in oklch, var(--canvas-ink) 15%, transparent) 28px); border-radius: 2px; }
+    .l-index .folder { font-family: 'Space Mono', monospace; margin-bottom: 24px; opacity: 1; display: inline-block; line-height: 1; }
+    .l-index .title { font-family: 'Caveat', "Kaiti SC", "STKaiti", cursive, serif; font-size: clamp(32px, 4vw, 42px); font-weight: 600; line-height: 1.35; padding: 0.1em 0; }
     .l-index .bottom { margin-top: auto; font-family: 'Space Mono', monospace; font-size: 10px; opacity: 0.4; }
+
+    .bookmark[data-size="small"] .l-index .title,
+    .bookmark[data-size="strip"] .l-index .title { font-size: clamp(18px, 2.5vw, 24px); line-height: 1.3; }
+    .bookmark[data-size="small"] .l-index .folder,
+    .bookmark[data-size="strip"] .l-index .folder { margin-bottom: 12px; }
 
     /* --- 14. Diagonal Split --- */
     .l-diagonal .bm-content-layer { padding: 0; }
@@ -339,31 +374,32 @@
     /* Override sizing constraints for certain layouts */
     .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
       font-size: clamp(34px, 5.6vw, 84px);
-      line-height: 1.02;
+      line-height: 1.15;
       letter-spacing: -0.052em;
       -webkit-line-clamp: 3;
     }
 
     .bookmark[data-size="wide"] .title {
       font-size: clamp(25px, 3.2vw, 54px);
-      line-height: 1.05;
+      line-height: 1.2;
       letter-spacing: -0.043em;
     }
 
     .bookmark[data-size="tall"] .title {
       font-size: clamp(23px, 2.8vw, 46px);
-      line-height: 1.08;
+      line-height: 1.2;
       letter-spacing: -0.038em;
     }
 
     .bookmark[data-size="small"] .title {
-      font-size: clamp(18px, 2vw, 28px);
-      line-height: 1.12;
+      font-size: clamp(14px, 1.8vw, 24px);
+      line-height: 1.25;
       letter-spacing: -0.03em;
+      -webkit-line-clamp: 4;
     }
 
     .bookmark[data-size="strip"] .title {
-      font-size: clamp(18px, 2.35vw, 34px);
+      font-size: clamp(14px, 2vw, 28px);
       line-height: 1.1;
       letter-spacing: -0.032em;
       -webkit-line-clamp: 2;
