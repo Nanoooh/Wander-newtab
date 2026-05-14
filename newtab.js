@@ -92,6 +92,14 @@ function loadFonts(urls) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = url;
+    const timeout = setTimeout(() => {
+      document.body.classList.add('fonts-blocked');
+    }, 3000);
+    link.onload = () => clearTimeout(timeout);
+    link.onerror = () => {
+      clearTimeout(timeout);
+      document.body.classList.add('fonts-blocked');
+    };
     document.head.appendChild(link);
   });
 }
@@ -105,7 +113,6 @@ function loadTheme(callback) {
       const isRandomEnabled = result['wander-random-theme'] !== false;
       
       if (isRandomEnabled) {
-        const THEME_ORDER = Object.keys(THEMES);
         key = THEME_ORDER[Math.floor(Math.random() * THEME_ORDER.length)];
         // We don't necessarily want to save this random key as the "current" theme 
         // if we want it to stay random on every refresh, but the current logic does it.
@@ -317,7 +324,7 @@ function buildCards(grid, picks, colors, layout, mode) {
         contentHtml = `<div class="title">${fTitle}</div><div class="meta"><span class="folder">${fFolder}</span><span class="number">${num}</span></div>`;
         break;
       case 'l-badge':
-        contentHtml = `<div class="badge">${num}</div><div class="folder">${fFolder}</div><div class="title">${fTitle}</div><div class="domain" style="margin-top:24px;">${fDomain}</div>`;
+        contentHtml = `<div class="badge">${num}</div><div class="folder">${fFolder}</div><div class="title">${fTitle}</div><div class="domain" style="margin-top:12px;">${fDomain}</div>`;
         break;
       case 'l-terminal':
         contentHtml = `<div class="folder">${fFolder}</div><div class="title">${fTitle}</div><div class="domain">${fDomain}</div>`;
@@ -326,7 +333,7 @@ function buildCards(grid, picks, colors, layout, mode) {
         contentHtml = `<div class="folder">${fFolder}.${num}</div><div class="title">${fTitle}</div><div class="bottom">${fDomain}</div>`;
         break;
       case 'l-diagonal':
-        contentHtml = `<div class="top-poly"><div class="number" style="font-size:24px; font-weight:800; opacity:1;">${num}</div><div class="folder" style="margin-top:16px; opacity:0.6;">${fFolder}</div></div><div class="bottom-poly"><div class="title">${fTitle}</div><div class="domain" style="margin-top:16px;">${fDomain}</div></div>`;
+        contentHtml = `<div class="top-poly"><div class="number" style="font-size:24px; font-weight:800; opacity:1;">${num}</div></div><div class="bottom-poly"><div class="title">${fTitle}</div><div class="folder" style="margin-top:auto; opacity:0.6;">${fFolder}</div><div class="domain" style="margin-top:4px;">${fDomain}</div></div>`;
         break;
       case 'l-classic':
       default:

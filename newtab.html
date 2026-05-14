@@ -35,6 +35,22 @@
       --layout-11: oklch(17% 0.013 72); --bg-11: #ffffff;
     }
 
+    /* Fallback font metric adjustment for blocked Google Fonts */
+    @font-face { font-family: "Cormorant Garamond Fallback"; src: local("Georgia"); size-adjust: 95%; ascent-override: 98%; descent-override: 20%; line-gap-override: 0%; }
+    @font-face { font-family: "Playfair Display Fallback"; src: local("Georgia"); size-adjust: 92%; ascent-override: 100%; descent-override: 22%; line-gap-override: 0%; }
+    @font-face { font-family: "Space Grotesk Fallback"; src: local("system-ui"); size-adjust: 96%; }
+    @font-face { font-family: "Archivo Black Fallback"; src: local("Impact"); size-adjust: 90%; }
+    @font-face { font-family: "Bebas Neue Fallback"; src: local("Impact"); size-adjust: 88%; }
+    @font-face { font-family: "Shrikhand Fallback"; src: local("Impact"); size-adjust: 92%; }
+    @font-face { font-family: "Instrument Serif Fallback"; src: local("Georgia"); size-adjust: 96%; }
+    @font-face { font-family: "Bricolage Grotesque Fallback"; src: local("system-ui"); size-adjust: 97%; }
+    @font-face { font-family: "Nunito Fallback"; src: local("system-ui"); size-adjust: 103%; }
+    @font-face { font-family: "Alfa Slab One Fallback"; src: local("Georgia"); size-adjust: 90%; }
+    @font-face { font-family: "DM Sans Fallback"; src: local("system-ui"); size-adjust: 97%; }
+    @font-face { font-family: "Jost Fallback"; src: local("system-ui"); size-adjust: 96%; }
+    @font-face { font-family: "Caveat Fallback"; src: local("Segoe Script"); size-adjust: 100%; }
+    @font-face { font-family: "Work Sans Fallback"; src: local("system-ui"); size-adjust: 97%; }
+
     html {
       min-height: 100%;
       background: var(--canvas);
@@ -142,7 +158,7 @@
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       grid-template-rows: repeat(8, minmax(0, 1fr));
-      gap: clamp(8px, 1.1vw, 14px);
+      gap: clamp(4px, min(1.1vw, 1vh), 14px);
       perspective: 1000px;
     }
 
@@ -221,7 +237,9 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: clamp(14px, 1.45vw, 24px) clamp(14px, 1.45vw, 24px) clamp(20px, 2vw, 32px);
+      min-height: 0;
+      overflow: hidden;
+      padding: clamp(8px, min(1.45vw, 1.2vh), 24px) clamp(10px, 1.45vw, 24px) clamp(10px, min(2vw, 1.5vh), 32px);
     }
 
     /* ---------- CORE ELEMENTS ---------- */
@@ -265,9 +283,9 @@
     }
 
     /* --- 1. Classic Balanced --- */
-    .l-classic .bm-content-layer { padding: clamp(14px, 1.45vw, 24px) clamp(14px, 1.45vw, 24px) clamp(20px, 2vw, 32px); }
+    .l-classic .bm-content-layer { padding: clamp(8px, min(1.45vw, 1.2vh), 24px) clamp(10px, 1.45vw, 24px) clamp(10px, min(2vw, 1.5vh), 32px); }
     .l-classic .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
-    .l-classic .mid { margin: auto 0; flex-grow: 1; display: flex; align-items: center; }
+    .l-classic .mid { margin: auto 0; flex-grow: 1; min-height: 0; overflow: hidden; display: flex; align-items: center; }
     .l-classic .bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; }
 
     .bookmark[data-size="small"] .l-classic .bm-content-layer,
@@ -286,28 +304,36 @@
     .l-heavy-header .header { background: var(--canvas-ink); color: var(--card-bg); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
     .l-heavy-header .header .folder { color: var(--card-bg); opacity: 1; font-weight: 800; font-size: 13px; }
     .l-heavy-header .header .number { color: var(--card-bg); }
-    .l-heavy-header .mid { padding: 32px 24px; flex-grow: 1; }
+    .l-heavy-header .mid { padding: 32px 24px; flex-grow: 1; min-height: 0; overflow: hidden; }
     .l-heavy-header .bottom { padding: 16px 24px; background: color-mix(in oklch, var(--canvas-ink) 5%, transparent); border-top: 1px solid color-mix(in oklch, var(--canvas-ink) 10%, transparent); display: flex; justify-content: space-between; }
 
     /* --- 4. Magazine Split --- */
     .l-magazine .bm-content-layer { padding: 0; }
-    .l-magazine .top-half { height: 45%; background: color-mix(in oklch, var(--canvas-ink) 8%, transparent); position: relative; }
+    .l-magazine .top-half { height: 38%; background: color-mix(in oklch, var(--canvas-ink) 8%, transparent); position: relative; }
     .l-magazine .top-half .number { position: absolute; top: 16px; right: 16px; font-size: clamp(34px, 4vw, 48px); font-family: 'Playfair Display', serif; opacity: 0.2; }
-    .l-magazine .bottom-half { padding: 24px; display: flex; flex-direction: column; height: 55%; box-sizing: border-box; }
+    .l-magazine .bottom-half { padding: clamp(12px, 1.45vw, 24px); display: flex; flex-direction: column; height: 62%; min-height: 0; overflow: hidden; box-sizing: border-box; }
     .l-magazine .title { font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
+    .bookmark.l-magazine[data-size="hero"] .title { -webkit-line-clamp: 2; }
+    .bookmark.l-magazine[data-size="wide"] .title { -webkit-line-clamp: 2; }
+    .bookmark.l-magazine[data-size="tall"] .title { -webkit-line-clamp: 3; }
+    .bookmark.l-magazine[data-size="small"] .title { -webkit-line-clamp: 2; }
+    .bookmark.l-magazine[data-size="strip"] .title { -webkit-line-clamp: 2; }
     .l-magazine .folder { margin-top: auto; opacity: 1; font-weight: 600; }
 
     .bookmark[data-size="small"] .l-magazine .top-half,
-    .bookmark[data-size="strip"] .l-magazine .top-half { height: 30%; }
+    .bookmark[data-size="strip"] .l-magazine .top-half { height: 25%; }
     .bookmark[data-size="small"] .l-magazine .top-half .number,
     .bookmark[data-size="strip"] .l-magazine .top-half .number { top: 8px; right: 10px; font-size: 24px; }
     .bookmark[data-size="small"] .l-magazine .bottom-half,
-    .bookmark[data-size="strip"] .l-magazine .bottom-half { height: 70%; padding: 16px; }
+    .bookmark[data-size="strip"] .l-magazine .bottom-half { height: 75%; padding: clamp(10px, 1vw, 16px); }
 
     /* --- 5. Brutalist Borders --- */
     .l-brutalist .bm-content-layer { padding: 24px; gap: 16px; }
-    .l-brutalist .mid { flex-grow: 1; display: flex; align-items: center; }
-    .l-brutalist .title { font-weight: 800; text-transform: uppercase; }
+    .l-brutalist .mid { flex-grow: 1; min-height: 0; overflow: hidden; display: flex; align-items: center; }
+    .l-brutalist .title { font-weight: 800; text-transform: uppercase; padding: 0; }
+    .bookmark.l-brutalist[data-size="tall"] .title { -webkit-line-clamp: 3; }
+    .bookmark.l-brutalist[data-size="small"] .title { -webkit-line-clamp: 3; }
+    .bookmark.l-brutalist[data-size="strip"] .title { -webkit-line-clamp: 2; }
     .l-brutalist .top, .l-brutalist .bottom { display: flex; justify-content: space-between; font-weight: 600; }
 
     /* --- 8. Grid Bento --- */
@@ -345,7 +371,10 @@
     .l-terminal .bm-content-layer { padding: 24px; font-family: 'Space Mono', monospace; border-radius: 0; }
     .l-terminal .folder { opacity: 1; text-transform: none; letter-spacing: 0; margin-bottom: 16px; }
     .l-terminal .folder::before { content: "root@wander:~# cd "; opacity: 0.6; }
-    .l-terminal .title { font-family: 'Space Mono', monospace; font-weight: 400; margin-bottom: 24px; line-height: 1.5; font-size: clamp(14px, 2vw, 18px); }
+    .l-terminal .title { font-family: 'Space Mono', monospace; font-weight: 400; margin-bottom: clamp(8px, 1vw, 24px); line-height: 1.4; font-size: clamp(14px, 2vw, 18px); }
+    .bookmark.l-terminal[data-size="tall"] .title { -webkit-line-clamp: 4; }
+    .bookmark.l-terminal[data-size="small"] .title { -webkit-line-clamp: 3; }
+    .bookmark.l-terminal[data-size="strip"] .title { -webkit-line-clamp: 2; }
     .l-terminal .title::before { content: "> "; opacity: 0.6; }
     .l-terminal .domain { opacity: 0.5; }
     .l-terminal .domain::before { content: "[LINK] "; }
@@ -363,11 +392,15 @@
 
     /* --- 14. Diagonal Split --- */
     .l-diagonal .bm-content-layer { padding: 0; }
-    .l-diagonal .top-poly { height: 60%; background: var(--canvas-ink); color: var(--card-bg); padding: 24px; clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%); }
-    .l-diagonal .top-poly .number { color: var(--card-bg); }
-    .l-diagonal .top-poly .folder { color: var(--card-bg); }
-    .l-diagonal .bottom-poly { padding: 24px; display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; }
+    .l-diagonal .top-poly { height: 40%; background: var(--canvas-ink); color: var(--card-bg); padding: clamp(14px, 1.45vw, 24px); clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%); }
     .l-diagonal .title { font-weight: 800; }
+    .bookmark.l-diagonal[data-size="hero"] .title { -webkit-line-clamp: 3; }
+    .bookmark.l-diagonal[data-size="wide"] .title { -webkit-line-clamp: 3; }
+    .bookmark.l-diagonal[data-size="tall"] .title { -webkit-line-clamp: 3; }
+    .bookmark.l-diagonal[data-size="small"] .title { -webkit-line-clamp: 2; }
+    .bookmark.l-diagonal[data-size="strip"] .title { -webkit-line-clamp: 2; }
+    .l-diagonal .top-poly .number { color: var(--card-bg); }
+    .l-diagonal .bottom-poly { padding: clamp(14px, 1.45vw, 24px); display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; min-height: 0; overflow: hidden; }
 
     /* Removed Swiss Grid */
 
@@ -769,6 +802,15 @@
       color: rgba(245, 240, 232, 0.55);
     }
 
+    /* Heavy-header layout: folder is on colored header, not on card bg */
+    .bookmark.is-dark-card.l-heavy-header .header .folder {
+      color: var(--card-bg);
+      opacity: 1;
+    }
+    .bookmark.is-dark-card.l-heavy-header .header .number {
+      color: var(--card-bg);
+    }
+
     .bookmark.is-dark-card .title {
       color: #F5F0E8;
     }
@@ -862,6 +904,163 @@
       [data-theme-type="dark"] .shuffle:hover {
         filter: brightness(1.2);
       }
+    }
+
+    /* ===== Height-responsive ===== */
+
+    /* Tier 1: moderate compression for 1080p and below */
+    @media (max-height: 1080px) and (min-width: 821px) {
+      .bm-content-layer {
+        padding: clamp(10px, 1.2vw, 20px) clamp(10px, 1.2vw, 20px) clamp(14px, 1.5vw, 26px);
+      }
+      .l-classic .bm-content-layer {
+        padding: clamp(10px, 1.2vw, 20px) clamp(10px, 1.2vw, 20px) clamp(14px, 1.5vw, 26px);
+      }
+      .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
+        -webkit-line-clamp: 2;
+      }
+      .board {
+        gap: clamp(6px, min(0.9vw, 0.9vh), 12px);
+      }
+    }
+
+    /* Tier 2: strong compression for 900p and below */
+    @media (max-height: 900px) and (min-width: 821px) {
+      .page {
+        gap: clamp(10px, 1.8vh, 20px);
+        padding-top: max(18px, env(safe-area-inset-top));
+        padding-bottom: max(14px, env(safe-area-inset-bottom));
+      }
+      .masthead { margin-bottom: -4px; }
+      .brand-name { font-size: clamp(22px, 2.6vw, 36px); }
+      .footline { min-height: 32px; }
+
+      .bm-content-layer,
+      .l-classic .bm-content-layer {
+        padding: 8px clamp(8px, 1vw, 16px) 12px;
+      }
+      .l-heavy-header .header { padding: 12px 16px; }
+      .l-heavy-header .mid { padding: 16px; }
+      .l-heavy-header .bottom { padding: 10px 16px; }
+      .l-magazine .bottom-half { padding: 12px; }
+      .l-brutalist .bm-content-layer { padding: 12px; gap: 8px; }
+      .l-bento .bm-content-layer { padding: 10px; gap: 6px; }
+      .l-bento .cell { padding: 8px; }
+      .l-poster .bm-content-layer { padding: 16px; }
+      .l-badge .bm-content-layer { padding: 20px 16px; }
+      .l-terminal .bm-content-layer { padding: 12px; }
+      .l-terminal .title { margin-bottom: 12px; }
+      .l-index .bm-content-layer { padding: 12px 16px; }
+      .l-diagonal .top-poly { padding: 14px; }
+      .l-diagonal .bottom-poly { padding: 14px; }
+
+      .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
+        font-size: clamp(28px, 4.5vw, 64px);
+        -webkit-line-clamp: 2;
+        line-height: 1.1;
+      }
+      .bookmark[data-size="wide"] .title {
+        font-size: clamp(20px, 2.6vw, 40px);
+        line-height: 1.15;
+      }
+      .bookmark[data-size="tall"] .title {
+        font-size: clamp(18px, 2.2vw, 36px);
+        line-height: 1.15;
+      }
+      .bookmark[data-size="small"] .title {
+        font-size: clamp(12px, 1.4vw, 20px);
+        -webkit-line-clamp: 3;
+      }
+      .bookmark[data-size="strip"] .title {
+        font-size: clamp(12px, 1.6vw, 24px);
+        -webkit-line-clamp: 2;
+      }
+      .title { font-size: 20px; }
+      .l-poster .title { font-size: clamp(28px, 4.5vw, 48px); }
+      .l-index .title { font-size: clamp(24px, 3vw, 34px); }
+      .l-terminal .title { font-size: clamp(12px, 1.6vw, 16px); }
+
+      .l-badge .domain { margin-top: 8px !important; }
+      .l-badge .badge { width: 36px; height: 36px; font-size: 14px; }
+
+      .board { gap: clamp(4px, min(0.8vw, 0.8vh), 10px); }
+    }
+
+    /* Tier 3: maximum compression for 768p and below */
+    @media (max-height: 768px) and (min-width: 821px) {
+      .page {
+        gap: 8px;
+        padding: max(12px, env(safe-area-inset-top)) 16px max(8px, env(safe-area-inset-bottom)) 16px;
+      }
+      .masthead { margin-bottom: -6px; }
+      .brand-name { font-size: 20px; }
+      .edition { font-size: 8px; }
+      .footline { min-height: 24px; }
+      .hint { display: none; }
+      .board { gap: 4px; }
+
+      .bm-content-layer,
+      .l-classic .bm-content-layer {
+        padding: 6px 8px 8px;
+      }
+      .l-heavy-header .header { padding: 8px 12px; }
+      .l-heavy-header .header .folder { font-size: 10px; }
+      .l-heavy-header .mid { padding: 8px 12px; }
+      .l-heavy-header .bottom { padding: 6px 12px; }
+      .l-magazine .bottom-half { padding: 8px; }
+      .l-brutalist .bm-content-layer { padding: 8px; gap: 4px; }
+      .l-bento .bm-content-layer { padding: 6px; gap: 4px; }
+      .l-bento .cell { padding: 6px; }
+      .l-poster .bm-content-layer { padding: 10px; }
+      .l-badge .bm-content-layer { padding: 14px 10px; }
+      .l-badge .badge { width: 28px; height: 28px; font-size: 11px; top: 8px; right: 8px; }
+      .l-terminal .bm-content-layer { padding: 8px; }
+      .l-terminal .title { margin-bottom: 6px; }
+      .l-index .bm-content-layer { padding: 8px 10px; }
+      .l-diagonal .top-poly { padding: 10px; }
+      .l-diagonal .bottom-poly { padding: 10px; }
+
+      .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
+        font-size: clamp(22px, 3.5vw, 48px);
+        -webkit-line-clamp: 2;
+        line-height: 1.08;
+      }
+      .bookmark[data-size="wide"] .title {
+        font-size: clamp(16px, 2vw, 32px);
+        line-height: 1.1;
+      }
+      .bookmark[data-size="tall"] .title {
+        font-size: clamp(15px, 1.8vw, 28px);
+        line-height: 1.1;
+      }
+      .bookmark[data-size="small"] .title {
+        font-size: clamp(11px, 1.2vw, 17px);
+        -webkit-line-clamp: 3;
+        line-height: 1.2;
+      }
+      .bookmark[data-size="strip"] .title {
+        font-size: clamp(11px, 1.4vw, 20px);
+        -webkit-line-clamp: 2;
+        line-height: 1.1;
+      }
+      .title { font-size: 16px; }
+      .folder, .domain, .number { font-size: 8px !important; }
+
+      .l-poster .title { font-size: clamp(20px, 3.5vw, 36px); }
+      .l-index .title { font-size: clamp(18px, 2.5vw, 28px); }
+      .l-terminal .title { font-size: clamp(11px, 1.4vw, 14px); }
+
+      .l-badge .domain { margin-top: 4px !important; }
+
+      .l-magazine .top-half { height: 35%; }
+      .l-magazine .bottom-half { height: 65%; }
+      .bookmark[data-size="small"] .l-magazine .top-half,
+      .bookmark[data-size="strip"] .l-magazine .top-half { height: 25%; }
+      .bookmark[data-size="small"] .l-magazine .bottom-half,
+      .bookmark[data-size="strip"] .l-magazine .bottom-half { height: 75%; }
+
+      .l-diagonal .top-poly { height: 35%; }
+      .l-diagonal .bottom-poly { height: 55%; }
     }
 
     /* ===== Responsive ===== */
@@ -964,6 +1163,16 @@
         scroll-behavior: auto !important;
         transition-duration: 1ms !important;
       }
+    }
+
+    /* ===== Fonts blocked fallback ===== */
+    body.fonts-blocked .bm-content-layer {
+      padding-top: 6px;
+      padding-bottom: 8px;
+    }
+    body.fonts-blocked .title {
+      line-height: 1.2;
+      padding: 0;
     }
 
     /* ===== Keyframes ===== */
