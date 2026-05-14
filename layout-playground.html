@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Layout Playground</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;600;800&family=Bebas+Neue&family=Caveat:wght@600&display=swap');
+
+    :root {
+      --bg: #e5e5e5;
+      --text: #111;
+      --card-bg: #fff;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin: 0;
+    }
+    .playground-item {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+    .label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .card {
+      width: 280px;
+      height: 340px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      color: #111;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Common elements */
+    .title { font-size: 24px; font-weight: 600; line-height: 1.1; }
+    .folder { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; }
+    .domain { font-size: 11px; opacity: 0.6; }
+    .number { font-size: 11px; opacity: 0.6; font-variant-numeric: tabular-nums; }
+    .icon { font-size: 12px; }
+
+    /* --- 1. Classic Balanced --- */
+    .l-classic { padding: 24px; }
+    .l-classic .top { display: flex; justify-content: space-between; }
+    .l-classic .mid { margin: auto 0; }
+    .l-classic .bottom { display: flex; justify-content: space-between; margin-top: auto; }
+
+    /* --- 2. Minimalist Bottom --- */
+    .l-minimal { padding: 32px 24px 24px 24px; justify-content: flex-end; }
+    .l-minimal .folder { margin-bottom: 8px; color: #666; font-weight: 600; opacity: 1; }
+    .l-minimal .title { font-size: 28px; letter-spacing: -0.02em; margin-bottom: 24px; }
+    .l-minimal .bottom { border-top: 1px solid #eee; padding-top: 16px; display: flex; justify-content: space-between; }
+
+    /* --- 3. Heavy Header --- */
+    .l-heavy-header { padding: 0; }
+    .l-heavy-header .header { background: #111; color: #fff; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .l-heavy-header .header .folder { opacity: 1; font-weight: 800; font-size: 13px; }
+    .l-heavy-header .mid { padding: 32px 24px; flex-grow: 1; }
+    .l-heavy-header .bottom { padding: 16px 24px; background: #f9f9f9; border-top: 1px solid #eee; display: flex; justify-content: space-between; }
+
+    /* --- 4. Magazine Split --- */
+    .l-magazine { padding: 0; }
+    .l-magazine .top-half { height: 45%; background: #e0e0e0; position: relative; }
+    .l-magazine .top-half .number { position: absolute; top: 16px; right: 16px; font-size: 48px; font-family: 'Playfair Display'; opacity: 0.2; }
+    .l-magazine .bottom-half { padding: 24px; display: flex; flex-direction: column; height: 55%; box-sizing: border-box; }
+    .l-magazine .title { font-family: 'Playfair Display'; font-size: 26px; font-weight: 600; }
+    .l-magazine .folder { margin-top: auto; color: #d32f2f; opacity: 1; font-weight: 600; }
+
+    /* --- 5. Brutalist Borders --- */
+    .l-brutalist { padding: 16px; border: 4px solid #111; border-radius: 0; box-shadow: 8px 8px 0 #111; gap: 12px; }
+    .l-brutalist .box { border: 2px solid #111; padding: 12px; }
+    .l-brutalist .mid { flex-grow: 1; display: flex; align-items: center; background: #ebff00; }
+    .l-brutalist .title { font-size: 22px; font-weight: 800; text-transform: uppercase; }
+    .l-brutalist .top, .l-brutalist .bottom { display: flex; justify-content: space-between; font-weight: 600; }
+
+    /* --- 6. Vertical Side-Tab --- */
+    .l-sidetab { padding: 0; flex-direction: row; }
+    .l-sidetab .tab { width: 40px; background: #111; color: #fff; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; transform: rotate(180deg); padding: 24px 0; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }
+    .l-sidetab .content { flex-grow: 1; padding: 24px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+    .l-sidetab .title { font-size: 22px; }
+
+    /* --- 7. Centered Elegance --- */
+    .l-centered { padding: 32px 24px; text-align: center; align-items: center; justify-content: center; gap: 24px; }
+    .l-centered .folder { letter-spacing: 0.2em; font-size: 10px; border-bottom: 1px solid #111; padding-bottom: 8px; }
+    .l-centered .title { font-family: 'Playfair Display'; font-size: 32px; font-weight: 400; font-style: italic; }
+    .l-centered .domain { font-style: italic; opacity: 0.5; }
+
+    /* --- 8. Grid Bento --- */
+    .l-bento { padding: 16px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; gap: 12px; }
+    .l-bento .cell { background: #f4f4f4; border-radius: 8px; padding: 16px; display: flex; align-items: center; }
+    .l-bento .c-folder { grid-column: 1; }
+    .l-bento .c-number { grid-column: 2; justify-content: flex-end; font-size: 24px; font-weight: 800; opacity: 0.2; }
+    .l-bento .c-title { grid-column: 1 / -1; align-items: flex-start; flex-direction: column; justify-content: center; background: #111; color: #fff; }
+    .l-bento .c-title .domain { margin-top: auto; opacity: 0.5; }
+
+    /* --- 9. Typographic Poster --- */
+    .l-poster { padding: 24px; background: #e91e63; color: #fff; }
+    .l-poster .title { font-family: 'Bebas Neue', sans-serif; font-size: 58px; line-height: 0.85; text-transform: uppercase; word-break: break-all; }
+    .l-poster .meta { position: absolute; right: 16px; bottom: 24px; writing-mode: vertical-rl; display: flex; gap: 16px; font-size: 10px; letter-spacing: 0.1em; }
+
+    /* --- 10. Bottom Solid Bar --- */
+    .l-bottombar { padding: 0; justify-content: space-between; }
+    .l-bottombar .top { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+    .l-bottombar .title { font-size: 28px; font-weight: 800; }
+    .l-bottombar .bar { background: #111; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* --- 11. Floating Badge --- */
+    .l-badge { padding: 32px 24px; justify-content: flex-end; }
+    .l-badge .badge { position: absolute; top: 16px; right: 16px; width: 48px; height: 48px; border-radius: 50%; background: #2196f3; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; }
+    .l-badge .folder { color: #2196f3; font-weight: 800; opacity: 1; margin-bottom: 12px; }
+
+    /* --- 12. Console Terminal --- */
+    .l-terminal { padding: 24px; background: #1e1e1e; color: #4af626; font-family: 'Space Mono', monospace; border-radius: 0; }
+    .l-terminal .folder { font-size: 12px; opacity: 1; text-transform: none; letter-spacing: 0; margin-bottom: 16px; color: #fff; }
+    .l-terminal .folder::before { content: "root@wander:~# cd "; color: #4af626; }
+    .l-terminal .title { font-family: 'Space Mono'; font-size: 16px; font-weight: 400; margin-bottom: 24px; line-height: 1.4; }
+    .l-terminal .title::before { content: "> "; }
+    .l-terminal .domain { opacity: 0.5; color: #aaa; }
+    .l-terminal .domain::before { content: "[LINK] "; }
+
+    /* --- 13. Index Card --- */
+    .l-index { padding: 32px 24px; background: #fdfbf7; background-image: repeating-linear-gradient(transparent, transparent 27px, #e0d8c8 28px); border-radius: 2px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+    .l-index .folder { font-family: 'Space Mono', monospace; color: #d32f2f; margin-bottom: 32px; font-size: 12px; opacity: 1; display: inline-block; }
+    .l-index .title { font-family: 'Caveat', cursive; font-size: 38px; font-weight: 600; line-height: 1.2; color: #001f3f; }
+    .l-index .bottom { margin-top: auto; font-family: 'Space Mono'; font-size: 10px; opacity: 0.4; color: #111; }
+
+    /* --- 14. Diagonal Split --- */
+    .l-diagonal { padding: 0; }
+    .l-diagonal .top-poly { height: 60%; background: #111; color: #fff; padding: 24px; clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%); }
+    .l-diagonal .bottom-poly { padding: 24px; display: flex; flex-direction: column; justify-content: flex-end; flex-grow: 1; }
+    .l-diagonal .title { font-size: 22px; font-weight: 800; }
+
+    /* --- 15. Outline Floating --- */
+    .l-outline { padding: 24px; background: transparent; border: 2px solid rgba(17,17,17,0.2); box-shadow: none; align-items: center; justify-content: center; text-align: center; }
+    .l-outline .circle { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #111; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 24px; font-family: 'Playfair Display'; }
+    .l-outline .title { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
+
+    /* --- 16. Swiss Grid --- */
+    .l-swiss { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto 1fr; gap: 2px; background: #111; border: 2px solid #111; border-radius: 0; }
+    .l-swiss > div { background: #fff; padding: 12px; }
+    .l-swiss .num { grid-column: 1; font-size: 24px; font-weight: 800; }
+    .l-swiss .fol { grid-column: 2; text-align: right; font-weight: 800; font-size: 10px; display: flex; align-items: center; justify-content: flex-end;}
+    .l-swiss .tit { grid-column: 1 / -1; display: flex; align-items: center; }
+    .l-swiss .tit .title { font-size: 26px; letter-spacing: -0.03em; font-weight: 800; }
+    .l-swiss .dom { grid-column: 1 / -1; align-items: flex-end; display: flex; }
+  </style>
+</head>
+<body>
+
+<script>
+  const layouts = [
+    {
+      name: "1. Classic Balanced",
+      html: `
+        <div class="card l-classic">
+          <div class="top"><span class="folder">Inspiration</span><span class="icon">★</span></div>
+          <div class="mid"><div class="title">The Art of UI Navigation</div></div>
+          <div class="bottom"><span class="domain">example.com</span><span class="number">01</span></div>
+        </div>`
+    },
+    {
+      name: "2. Minimalist Bottom",
+      html: `
+        <div class="card l-minimal">
+          <div class="folder">INSPIRATION</div>
+          <div class="title">The Art of UI Navigation</div>
+          <div class="bottom"><span class="domain">example.com</span><span class="number">02</span></div>
+        </div>`
+    },
+    {
+      name: "3. Heavy Header",
+      html: `
+        <div class="card l-heavy-header">
+          <div class="header"><span class="folder">INSPIRATION</span><span class="number">03</span></div>
+          <div class="mid"><div class="title">The Art of UI Navigation</div></div>
+          <div class="bottom"><span class="domain">example.com</span><span class="icon">★</span></div>
+        </div>`
+    },
+    {
+      name: "4. Magazine Split",
+      html: `
+        <div class="card l-magazine">
+          <div class="top-half"><div class="number">04</div></div>
+          <div class="bottom-half">
+            <div class="title">The Art of UI Navigation</div>
+            <div class="folder">INSPIRATION</div>
+          </div>
+        </div>`
+    },
+    {
+      name: "5. Brutalist Borders",
+      html: `
+        <div class="card l-brutalist">
+          <div class="box top"><span class="folder">INSPIRATION</span><span class="number">05</span></div>
+          <div class="box mid"><div class="title">The Art of UI Navigation</div></div>
+          <div class="box bottom"><span class="domain">example.com</span></div>
+        </div>`
+    },
+    {
+      name: "6. Vertical Side-Tab",
+      html: `
+        <div class="card l-sidetab">
+          <div class="tab">INSPIRATION</div>
+          <div class="content">
+            <div class="number">06</div>
+            <div class="title">The Art of UI Navigation</div>
+            <div class="domain">example.com</div>
+          </div>
+        </div>`
+    },
+    {
+      name: "7. Centered Elegance",
+      html: `
+        <div class="card l-centered">
+          <div class="folder">INSPIRATION</div>
+          <div class="title">The Art of UI Navigation</div>
+          <div class="domain">example.com</div>
+          <div class="number">— 07 —</div>
+        </div>`
+    },
+    {
+      name: "8. Grid Bento",
+      html: `
+        <div class="card l-bento">
+          <div class="cell c-folder"><span class="folder">INSPIRATION</span></div>
+          <div class="cell c-number">08</div>
+          <div class="cell c-title">
+            <div class="title">The Art of UI Navigation</div>
+            <div class="domain">example.com</div>
+          </div>
+        </div>`
+    },
+    {
+      name: "9. Typographic Poster",
+      html: `
+        <div class="card l-poster">
+          <div class="title">THE ART<br>OF UI<br>NAVI<br>GATION</div>
+          <div class="meta"><span class="folder">INSPIRATION</span><span class="number">09</span></div>
+        </div>`
+    },
+    {
+      name: "10. Bottom Solid Bar",
+      html: `
+        <div class="card l-bottombar">
+          <div class="top">
+            <div class="folder" style="margin-bottom:16px;">INSPIRATION</div>
+            <div class="title">The Art of UI Navigation</div>
+          </div>
+          <div class="bar"><span class="domain">example.com</span><span class="number">10</span></div>
+        </div>`
+    },
+    {
+      name: "11. Floating Badge",
+      html: `
+        <div class="card l-badge">
+          <div class="badge">11</div>
+          <div class="folder">INSPIRATION</div>
+          <div class="title">The Art of UI Navigation</div>
+          <div class="domain" style="margin-top:24px;">example.com</div>
+        </div>`
+    },
+    {
+      name: "12. Console Terminal",
+      html: `
+        <div class="card l-terminal">
+          <div class="folder">inspiration</div>
+          <div class="title">the_art_of_ui_navigation.md</div>
+          <div class="domain">example.com</div>
+        </div>`
+    },
+    {
+      name: "13. Index Card",
+      html: `
+        <div class="card l-index">
+          <div class="folder">INSPIRATION.13</div>
+          <div class="title">The Art of UI Navigation</div>
+          <div class="bottom">example.com</div>
+        </div>`
+    },
+    {
+      name: "14. Diagonal Split",
+      html: `
+        <div class="card l-diagonal">
+          <div class="top-poly">
+            <div class="number" style="font-size:24px; font-weight:800; opacity:1;">14</div>
+            <div class="folder" style="margin-top:16px; opacity:0.6;">INSPIRATION</div>
+          </div>
+          <div class="bottom-poly">
+            <div class="title">The Art of UI Navigation</div>
+            <div class="domain" style="margin-top:16px;">example.com</div>
+          </div>
+        </div>`
+    },
+    {
+      name: "15. Outline Floating",
+      html: `
+        <div class="card l-outline">
+          <div class="circle">15</div>
+          <div class="title">The Art of UI Navigation</div>
+          <div class="folder">INSPIRATION</div>
+        </div>`
+    },
+    {
+      name: "16. Swiss Grid",
+      html: `
+        <div class="card l-swiss">
+          <div class="num">16</div>
+          <div class="fol">INSPIRATION</div>
+          <div class="tit"><div class="title">The Art of UI Navigation</div></div>
+          <div class="dom"><span class="domain">example.com</span></div>
+        </div>`
+    }
+  ];
+
+  layouts.forEach(layout => {
+    const container = document.createElement('div');
+    container.className = 'playground-item';
+    container.innerHTML = `
+      ${layout.html}
+      <div class="label">${layout.name}</div>
+    `;
+    document.body.appendChild(container);
+  });
+</script>
+</body>
+</html>

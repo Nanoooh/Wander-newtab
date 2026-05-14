@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wander Design Gallery - 16 Schemes</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;800&family=Bebas+Neue&family=Caveat:wght@600&family=Space+Grotesk:wght@400;700&family=Archivo+Black&family=Shrikhand&family=Nunito:wght@800&display=swap');
+
+    :root {
+      --bg: #0a0a0a;
+      --text: #fff;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+      align-items: center;
+    }
+
+    h1 { font-size: 48px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 0; }
+    p.subtitle { opacity: 0.5; margin-top: 8px; font-size: 18px; }
+
+    .scheme-section {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .scheme-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 16px;
+    }
+
+    .scheme-info h2 { margin: 0; font-size: 24px; }
+    .scheme-info span { opacity: 0.5; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 300px);
+      gap: 20px;
+      perspective: 1000px;
+    }
+
+    .card {
+      position: relative;
+      background: #fff;
+      color: #111;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    /* Transition Base */
+    .bm-bg-layer { position: absolute; inset: 0; background: inherit; z-index: 0; }
+    .bm-content-layer { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
+
+    /* Layout Styles (Simplified from layout-playground) */
+    .l-classic { padding: 24px; }
+    .l-minimal { padding: 24px; justify-content: flex-end; }
+    .l-minimal .title { font-size: 22px; }
+    .l-heavy-header .header { background: #111; color: #fff; padding: 12px 20px; font-size: 12px; font-weight: 800; }
+    .l-heavy-header .mid { padding: 24px; flex-grow: 1; }
+    .l-magazine .top-half { height: 40%; background: rgba(0,0,0,0.1); }
+    .l-magazine .bottom-half { padding: 20px; flex-grow: 1; }
+    .l-magazine .title { font-family: 'Playfair Display'; }
+    .l-brutalist { border: 3px solid #111; border-radius: 0; padding: 16px; box-shadow: 6px 6px 0 #111; }
+    .l-sidetab { flex-direction: row; }
+    .l-sidetab .tab { width: 30px; background: #111; color: #fff; writing-mode: vertical-rl; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; font-size: 9px; }
+    .l-sidetab .content { padding: 20px; flex-grow: 1; }
+    .l-centered { padding: 24px; text-align: center; align-items: center; justify-content: center; }
+    .l-bento { padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .l-bento .cell { background: rgba(0,0,0,0.05); padding: 10px; border-radius: 4px; }
+    .l-bento .c-title { grid-column: 1 / -1; background: #111; color: #fff; }
+    .l-poster { padding: 20px; background: #ff4757; color: #fff; }
+    .l-poster .title { font-family: 'Bebas Neue'; font-size: 40px; line-height: 0.9; }
+    .l-bottombar { justify-content: space-between; }
+    .l-bottombar .top { padding: 20px; }
+    .l-bottombar .bar { background: #111; color: #fff; padding: 10px 20px; font-size: 11px; }
+    .l-badge .badge { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; background: #3742fa; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+    .l-badge { padding: 24px; justify-content: flex-end; }
+    .l-terminal { background: #1e1e1e; color: #2ed573; font-family: 'Space Mono'; padding: 20px; }
+    .l-index { background: #fdfbf7; background-image: repeating-linear-gradient(transparent, transparent 24px, #e0d8c8 25px); padding: 24px; }
+    .l-index .title { font-family: 'Caveat'; font-size: 28px; }
+    .l-diagonal .top-poly { height: 50%; clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%); background: #111; color: #fff; padding: 20px; }
+    .l-diagonal .bottom-poly { padding: 20px; }
+    .l-outline { background: transparent; border: 2px solid #111; box-shadow: none; align-items: center; justify-content: center; text-align: center; }
+    .l-swiss { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #111; padding: 1px; border-radius: 0; }
+    .l-swiss > div { background: #fff; padding: 10px; }
+    .l-swiss .tit { grid-column: 1 / -1; }
+
+    /* Transitions (From transition-playground) */
+    .is-animating .bm-bg-layer, .is-animating .bm-content-layer { animation-duration: 700ms; animation-fill-mode: both; }
+
+    .anim-slice.is-animating .bm-bg-layer { animation-name: sliceBg; }
+    @keyframes sliceBg { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+    .anim-wipe-up.is-animating .bm-bg-layer { animation-name: wipeUpBg; transform-origin: bottom; }
+    @keyframes wipeUpBg { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+    .anim-glitch.is-animating .bm-bg-layer { animation-name: glitchBg; animation-timing-function: steps(5); }
+    @keyframes glitchBg { 0% { opacity: 0; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+    .anim-blind.is-animating .bm-bg-layer { animation-name: blindBg; }
+    @keyframes blindBg { from { transform: perspective(800px) rotateX(90deg); opacity: 0; } to { transform: perspective(800px) rotateX(0deg); opacity: 1; } }
+
+    .anim-diagonal.is-animating .bm-bg-layer { animation-name: diagBg; }
+    @keyframes diagBg { from { clip-path: polygon(0 0, 0 0, 0 0, 0 0); } to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); } }
+
+    .anim-iris.is-animating .bm-bg-layer { animation-name: irisBg; }
+    @keyframes irisBg { from { clip-path: circle(0% at 50% 50%); } to { clip-path: circle(150% at 50% 50%); } }
+
+    .anim-bounce.is-animating .bm-bg-layer { animation-name: bounceBg; animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes bounceBg { from { transform: scale(0); border-radius: 50%; } to { transform: scale(1); border-radius: inherit; } }
+
+    .anim-flip.is-animating .bm-bg-layer { animation-name: flipBg; }
+    @keyframes flipBg { from { transform: perspective(1000px) rotateY(-90deg); opacity: 0; } to { transform: perspective(1000px) rotateY(0deg); opacity: 1; } }
+
+    .anim-zoomin.is-animating .bm-bg-layer { animation-name: zoominBg; }
+    @keyframes zoominBg { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .anim-hinge.is-animating .bm-bg-layer { animation-name: hingeBg; transform-origin: top left; }
+    @keyframes hingeBg { 0% { transform: rotate(90deg); opacity: 0; } 60% { transform: rotate(-5deg); opacity: 1; } 100% { transform: rotate(0deg); opacity: 1; } }
+
+    .anim-split.is-animating .bm-bg-layer { animation-name: splitBg; }
+    @keyframes splitBg { from { clip-path: inset(0 50% 0 50%); opacity: 0; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+
+    .anim-zoomout.is-animating .bm-bg-layer { animation-name: zoomoutBg; }
+    @keyframes zoomoutBg { from { transform: scale(1.5); opacity: 0; filter: blur(10px); } to { transform: scale(1); opacity: 1; filter: blur(0); } }
+
+    .anim-minimal.is-animating .bm-bg-layer { animation-name: minimalBg; }
+    @keyframes minimalBg { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .anim-skew.is-animating .bm-bg-layer { animation-name: skewBg; }
+    @keyframes skewBg { from { transform: translateX(100%) skewX(-20deg); opacity: 0; } to { transform: translateX(0) skewX(0); opacity: 1; } }
+
+    .anim-drop.is-animating .bm-bg-layer { animation-name: dropBg; }
+    @keyframes dropBg { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .anim-elevator.is-animating .bm-bg-layer { animation-name: elevBg; }
+    @keyframes elevBg { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    button.play-btn {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: transform 0.2s;
+    }
+    button.play-btn:hover { transform: scale(1.05); background: #eee; }
+
+    .title { font-size: 18px; font-weight: 700; line-height: 1.2; margin-top: 8px; }
+    .folder { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; }
+
+  </style>
+</head>
+<body>
+
+  <h1>Wander Design Gallery</h1>
+  <p class="subtitle">16 Unique Layout & Transition Combinations</p>
+
+  <div id="gallery"></div>
+
+  <script>
+    const schemes = [
+      { id: 1, name: "Modern Bauhaus", layout: "l-swiss", trans: "anim-slice", palette: ["#ff3e00", "#111", "#fff", "#ffbe00", "#00a8ff", "#00d1b2"] },
+      { id: 2, name: "Ethereal Morning", layout: "l-minimal", trans: "anim-wipe-up", palette: ["#f8f9fa", "#e9ecef", "#dee2e6", "#ced4da", "#adb5bd", "#6c757d"] },
+      { id: 3, name: "Digital Noir", layout: "l-terminal", trans: "anim-glitch", palette: ["#1a1a1a", "#222", "#333", "#0f0", "#00ff41", "#003b00"] },
+      { id: 4, name: "Velvet Magazine", layout: "l-magazine", trans: "anim-blind", palette: ["#5d1a1d", "#f4e1d2", "#d4a373", "#faedcd", "#ccd5ae", "#e9edc9"] },
+      { id: 5, name: "Neon Punk", layout: "l-brutalist", trans: "anim-diagonal", palette: ["#ff00ff", "#00ffff", "#ffff00", "#000", "#fff", "#f0f"] },
+      { id: 6, name: "Zen Garden", layout: "l-centered", trans: "anim-iris", palette: ["#e3f2fd", "#bbdefb", "#90caf9", "#64b5f6", "#42a5f5", "#2196f3"] },
+      { id: 7, name: "Pop Art", layout: "l-poster", trans: "anim-bounce", palette: ["#f1c40f", "#e67e22", "#e74c3c", "#9b59b6", "#3498db", "#2ecc71"] },
+      { id: 8, name: "Retro Desktop", layout: "l-sidetab", trans: "anim-flip", palette: ["#c0c0c0", "#808080", "#000080", "#fff", "#008080", "#c0c0c0"] },
+      { id: 9, name: "Bento Box", layout: "l-bento", trans: "anim-zoomin", palette: ["#fdf2f2", "#fde8e8", "#fbd5d5", "#f8b4b4", "#f05252", "#c81e1e"] },
+      { id: 10, name: "Paper Archive", layout: "l-index", trans: "anim-hinge", palette: ["#fff9db", "#fff3bf", "#ffec99", "#ffe066", "#ffd43b", "#fcc419"] },
+      { id: 11, name: "Cyber Grid", layout: "l-bottombar", trans: "anim-split", palette: ["#e3fafc", "#c5f6fa", "#99e9f2", "#66d9e8", "#3bc9db", "#22b8cf"] },
+      { id: 12, name: "Luxury Brand", layout: "l-badge", trans: "anim-zoomout", palette: ["#f8f0fc", "#f3d9fa", "#eebefa", "#e599f7", "#da77f2", "#cc5de8"] },
+      { id: 13, name: "Drafting Board", layout: "l-outline", trans: "anim-minimal", palette: ["#f1f3f5", "#e9ecef", "#dee2e6", "#ced4da", "#adb5bd", "#868e96"] },
+      { id: 14, name: "Kinetic Type", layout: "l-heavy-header", trans: "anim-skew", palette: ["#fff5f5", "#ffe3e3", "#ffc9c9", "#ffa8a8", "#ff8787", "#ff6b6b"] },
+      { id: 15, name: "Sunset Boulevard", layout: "l-diagonal", trans: "anim-drop", palette: ["#fff4e6", "#ffe8cc", "#ffd8a8", "#ffc078", "#ffa94d", "#ff922b"] },
+      { id: 16, name: "Classic Library", layout: "l-classic", trans: "anim-elevator", palette: ["#f4ece1", "#e8d5c4", "#d7bca6", "#c6a388", "#b58a6a", "#a4714c"] },
+    ];
+
+    const container = document.getElementById('gallery');
+
+    schemes.forEach(s => {
+      const section = document.createElement('div');
+      section.className = 'scheme-section';
+      
+      const header = document.createElement('div');
+      header.className = 'scheme-header';
+      header.innerHTML = `
+        <div class="scheme-info">
+          <span>Scheme #${s.id}</span>
+          <h2>${s.name}</h2>
+          <small>Layout: ${s.layout} | Motion: ${s.trans}</small>
+        </div>
+        <button class="play-btn" onclick="playScheme(${s.id})">Shuffle Animation</button>
+      `;
+
+      const grid = document.createElement('div');
+      grid.className = 'grid-container';
+      grid.id = `scheme-${s.id}`;
+
+      for (let i = 0; i < 6; i++) {
+        const card = document.createElement('div');
+        card.className = `card ${s.layout} ${s.trans}`;
+        card.style.backgroundColor = s.palette[i];
+        
+        // Add content based on layout
+        let content = '';
+        if (s.layout === 'l-swiss') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div>0${i+1}</div><div>ART</div><div class="tit"><div class="title">Visual System</div></div></div>`;
+        } else if (s.layout === 'l-minimal') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="folder">Archive</div><div class="title">The Modern Era</div></div>`;
+        } else if (s.layout === 'l-terminal') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div>root@wander:~$</div><div class="title">access_granted.sh</div></div>`;
+        } else if (s.layout === 'l-magazine') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="top-half"></div><div class="bottom-half"><div class="folder">Design</div><div class="title">Editorial Flow</div></div></div>`;
+        } else if (s.layout === 'l-brutalist') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="folder">0${i+1}</div><div class="title">BRUTAL TYPE</div></div>`;
+        } else if (s.layout === 'l-sidetab') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="tab">PROJECT</div><div class="content"><div class="title">Dynamic UI</div></div></div>`;
+        } else if (s.layout === 'l-centered') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="folder">— 0${i+1} —</div><div class="title">Zen Balance</div></div>`;
+        } else if (s.layout === 'l-bento') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="cell">0${i+1}</div><div class="cell">★</div><div class="cell c-title"><div class="title">Grid Logic</div></div></div>`;
+        } else if (s.layout === 'l-poster') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="title">BOLD<br>POSTER</div></div>`;
+        } else if (s.layout === 'l-bottombar') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="top"><div class="title">Streamline</div></div><div class="bar">WANDER.0${i+1}</div></div>`;
+        } else if (s.layout === 'l-badge') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="badge">${i+1}</div><div class="title">Floating Elements</div></div>`;
+        } else if (s.layout === 'l-index') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="folder">NOTE 0${i+1}</div><div class="title">Analog Thoughts</div></div>`;
+        } else if (s.layout === 'l-diagonal') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="top-poly">0${i+1}</div><div class="bottom-poly"><div class="title">Skewed Vision</div></div></div>`;
+        } else if (s.layout === 'l-outline') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="title">Outline<br>Draft</div></div>`;
+        } else if (s.layout === 'l-heavy-header') {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="header">CAT: DESIGN</div><div class="mid"><div class="title">Header Emphasis</div></div></div>`;
+        } else {
+          content = `<div class="bm-bg-layer"></div><div class="bm-content-layer"><div class="folder">Classic</div><div class="title">Traditional Grid</div></div>`;
+        }
+
+        card.innerHTML = content;
+        grid.appendChild(card);
+      }
+
+      section.appendChild(header);
+      section.appendChild(grid);
+      container.appendChild(section);
+    });
+
+    window.playScheme = function(id) {
+      const grid = document.getElementById(`scheme-${id}`);
+      const cards = grid.querySelectorAll('.card');
+      cards.forEach((c, index) => {
+        c.classList.remove('is-animating');
+        void c.offsetWidth; // Trigger reflow
+        setTimeout(() => {
+          c.classList.add('is-animating');
+        }, index * 50); // Staggered
+      });
+    }
+
+    // Auto-play first one
+    setTimeout(() => playScheme(1), 500);
+  </script>
+</body>
+</html>
