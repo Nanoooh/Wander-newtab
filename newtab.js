@@ -1,4 +1,8 @@
 const CARDS_COUNT = 6;
+const CARD_ANIMATION_SETTLE_MS = 1120;
+const SHUFFLE_ANIMATION_SETTLE_MS = 1380;
+const PRELOAD_THEME_KEY = 'wander-preload-theme';
+const PRELOAD_RANDOM_THEME_KEY = 'wander-preload-random-theme';
 
 const CARD_SIZES = ['hero', 'wide', 'tall', 'tall', 'small', 'small'];
 
@@ -21,6 +25,26 @@ let currentThemeKey = DEFAULT_THEME;
 let currentPalette = THEMES.classic.palette;
 let allBookmarks = [];
 let settleTimer = 0;
+let pendingEnterFrame = 0;
+
+function getPreloadedThemeKey() {
+  const key = document.documentElement.getAttribute('data-theme');
+  return THEMES[key] ? key : DEFAULT_THEME;
+}
+
+function rememberThemePreference(themeKey, isRandomEnabled) {
+  try {
+    localStorage.setItem(PRELOAD_THEME_KEY, themeKey);
+    localStorage.setItem(PRELOAD_RANDOM_THEME_KEY, String(isRandomEnabled));
+  } catch {
+    // Local storage can be unavailable in restricted contexts; the extension still works without preload.
+  }
+}
+
+function revealTheme() {
+  document.documentElement.style.visibility = '';
+  delete document.documentElement.dataset.themeResolving;
+}
 
 /* ===== Color utilities ===== */
 
@@ -28,17 +52,72 @@ const _colorCache = new Map();
 
 function parseColor(color) {
   if (_colorCache.has(color)) return _colorCache.get(color);
-  const temp = document.createElement('div');
-  temp.style.color = color;
-  temp.style.position = 'absolute';
-  temp.style.visibility = 'hidden';
-  document.body.appendChild(temp);
-  const computed = getComputedStyle(temp).color;
-  document.body.removeChild(temp);
-  const m = computed.match(/[\d.]+/g);
-  const result = (!m || m.length < 3) ? null : [Number(m[0]), Number(m[1]), Number(m[2])];
+  const result = colorToRgb(color);
   _colorCache.set(color, result);
   return result;
+}
+
+function colorToRgb(color) {
+  if (!color) return null;
+  const hex = color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (hex) {
+    const value = hex[1].length === 3
+      ? hex[1].split('').map((ch) => ch + ch).join('')
+      : hex[1];
+    return [
+      parseInt(value.slice(0, 2), 16),
+      parseInt(value.slice(2, 4), 16),
+      parseInt(value.slice(4, 6), 16),
+    ];
+  }
+
+  const rgb = color.match(/rgba?\(([^)]+)\)/i);
+  if (rgb) {
+    const values = rgb[1].split(/[\s,\/]+/).filter(Boolean).slice(0, 3).map(Number);
+    return values.length === 3 && values.every(Number.isFinite) ? values : null;
+  }
+
+  const oklch = color.match(/oklch\(\s*([+-]?[\d.]+%?)\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)(deg|rad|turn)?/i);
+  if (oklch) {
+    const l = oklch[1].endsWith('%') ? Number(oklch[1].slice(0, -1)) / 100 : Number(oklch[1]);
+    const c = Number(oklch[2]);
+    let h = Number(oklch[3]);
+    if (oklch[4] === 'rad') h = h * 180 / Math.PI;
+    if (oklch[4] === 'turn') h = h * 360;
+    return oklchToRgb(l, c, h);
+  }
+
+  return null;
+}
+
+function oklchToRgb(l, c, h) {
+  if (![l, c, h].every(Number.isFinite)) return null;
+
+  const radians = h * Math.PI / 180;
+  const a = c * Math.cos(radians);
+  const b = c * Math.sin(radians);
+
+  const lPrime = l + 0.3963377774 * a + 0.2158037573 * b;
+  const mPrime = l - 0.1055613458 * a - 0.0638541728 * b;
+  const sPrime = l - 0.0894841775 * a - 1.2914855480 * b;
+
+  const l3 = lPrime ** 3;
+  const m3 = mPrime ** 3;
+  const s3 = sPrime ** 3;
+
+  return [
+    linearSrgbToByte(4.0767416621 * l3 - 3.3077115913 * m3 + 0.2309699292 * s3),
+    linearSrgbToByte(-1.2684380046 * l3 + 2.6097574011 * m3 - 0.3413193965 * s3),
+    linearSrgbToByte(-0.0041960863 * l3 - 0.7034186147 * m3 + 1.7076147010 * s3),
+  ];
+}
+
+function linearSrgbToByte(value) {
+  const clamped = Math.min(1, Math.max(0, value));
+  const encoded = clamped <= 0.0031308
+    ? 12.92 * clamped
+    : 1.055 * (clamped ** (1 / 2.4)) - 0.055;
+  return Math.round(encoded * 255);
 }
 
 function isColorDark(color) {
@@ -85,13 +164,28 @@ function applyTheme(themeKey) {
 
 let fontsLoaded = new Set();
 
+function normalizedFontUrl(url) {
+  if (url.includes('display=')) {
+    return url.replace(/([?&])display=[^&]+/, '$1display=optional');
+  }
+  return url + (url.includes('?') ? '&' : '?') + 'display=optional';
+}
+
 function loadFonts(urls) {
   urls.forEach((url) => {
-    if (fontsLoaded.has(url)) return;
-    fontsLoaded.add(url);
+    const href = normalizedFontUrl(url);
+    if (fontsLoaded.has(href)) return;
+    const existing = Array.from(document.querySelectorAll('link[data-wander-font]'))
+      .some((link) => link.dataset.wanderFont === href);
+    if (existing) {
+      fontsLoaded.add(href);
+      return;
+    }
+    fontsLoaded.add(href);
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = url;
+    link.href = href;
+    link.dataset.wanderFont = href;
     const timeout = setTimeout(() => {
       document.body.classList.add('fonts-blocked');
     }, 3000);
@@ -113,18 +207,19 @@ function loadTheme(callback) {
       const isRandomEnabled = result['wander-random-theme'] !== false;
       
       if (isRandomEnabled) {
-        key = THEME_ORDER[Math.floor(Math.random() * THEME_ORDER.length)];
-        // We don't necessarily want to save this random key as the "current" theme 
-        // if we want it to stay random on every refresh, but the current logic does it.
-        // I will keep it as is to avoid changing behavior other than the default.
-        chrome.storage.local.set({ [STORAGE_KEY]: key });
+        key = getPreloadedThemeKey();
       }
-      
+
+      rememberThemePreference(key, isRandomEnabled);
       applyTheme(key);
+      revealTheme();
       callback();
     });
   } else {
-    applyTheme(DEFAULT_THEME);
+    const key = getPreloadedThemeKey();
+    rememberThemePreference(key, true);
+    applyTheme(key);
+    revealTheme();
     callback();
   }
 }
@@ -167,6 +262,24 @@ function randomBetween(min, max) { return min + Math.random() * (max - min); }
 
 let lastLayoutName = '';
 
+function cancelPendingEnter() {
+  if (!pendingEnterFrame) return;
+  window.cancelAnimationFrame(pendingEnterFrame);
+  pendingEnterFrame = 0;
+}
+
+function scheduleInitialEnter(grid) {
+  cancelPendingEnter();
+  pendingEnterFrame = window.requestAnimationFrame(() => {
+    pendingEnterFrame = window.requestAnimationFrame(() => {
+      pendingEnterFrame = 0;
+      grid.classList.remove('is-preparing-enter');
+      grid.classList.add('is-entering');
+      settleTimer = window.setTimeout(() => grid.classList.remove('is-entering'), CARD_ANIMATION_SETTLE_MS);
+    });
+  });
+}
+
 function pickLayout() {
   const options = LAYOUTS.filter((l) => l.name !== lastLayoutName);
   const layout = options[Math.floor(Math.random() * options.length)] || LAYOUTS[0];
@@ -196,10 +309,11 @@ function siteInitial(domain) {
   return (cleaned[0] || '?').toUpperCase();
 }
 
-function renderCards(bookmarks) {
+function renderCards(bookmarks, options = {}) {
   const grid = document.getElementById('cardsGrid');
 
   if (!bookmarks || bookmarks.length === 0) {
+    cancelPendingEnter();
     grid.className = 'board';
     grid.innerHTML = `<div class="empty"><div class="empty-title">Nothing saved yet</div><div class="empty-sub">Save a few sites to Chrome bookmarks and Wander will make a new spread.</div></div>`;
     return;
@@ -229,14 +343,20 @@ function renderCards(bookmarks) {
     });
     window.setTimeout(() => buildCards(grid, picks, colors, layout, 'deal'), 250);
   } else {
-    buildCards(grid, picks, colors, layout, 'enter');
+    buildCards(grid, picks, colors, layout, 'enter', options);
   }
 }
 
-function buildCards(grid, picks, colors, layout, mode) {
+function buildCards(grid, picks, colors, layout, mode, options = {}) {
   window.clearTimeout(settleTimer);
-  const stateClass = mode === 'deal' ? ' is-dealing' : mode === 'enter' ? ' is-entering' : '';
-  grid.className = `board spread-${layout.name}${stateClass}`;
+  cancelPendingEnter();
+  const deferEnter = mode === 'enter' && options.deferEnterAnimation;
+  const stateClass = mode === 'deal'
+    ? 'is-dealing'
+    : mode === 'enter'
+      ? (deferEnter ? 'is-preparing-enter' : 'is-entering')
+      : '';
+  grid.className = `board spread-${layout.name}${stateClass ? ` ${stateClass}` : ''}`;
   grid.innerHTML = '';
 
   const theme = THEMES[currentThemeKey];
@@ -244,6 +364,7 @@ function buildCards(grid, picks, colors, layout, mode) {
 
   const sliceModes = ['inward', 'outward', 'random'];
   const sliceMode = sliceModes[Math.floor(Math.random() * sliceModes.length)];
+  const fragment = document.createDocumentFragment();
 
   picks.forEach((bookmark, i) => {
     const link = document.createElement('a');
@@ -365,12 +486,17 @@ function buildCards(grid, picks, colors, layout, mode) {
       link.classList.add('has-long-title');
     }
 
-    grid.appendChild(link);
+    fragment.appendChild(link);
   });
 
+  grid.appendChild(fragment);
+
   if (mode === 'deal' || mode === 'enter') {
-    const delay = mode === 'deal' ? 760 : 860;
-    settleTimer = window.setTimeout(() => grid.classList.remove(stateClass.trim()), delay);
+    if (deferEnter) {
+      scheduleInitialEnter(grid);
+    } else if (stateClass) {
+      settleTimer = window.setTimeout(() => grid.classList.remove(stateClass), CARD_ANIMATION_SETTLE_MS);
+    }
   }
 }
 
@@ -420,7 +546,7 @@ loadTheme(() => {
   updateAmbientGlow();
   loadBookmarks((tree) => {
     allBookmarks = flattenBookmarks(tree);
-    renderCards(allBookmarks);
+    renderCards(allBookmarks, { deferEnterAnimation: true });
 
     if (allBookmarks.length > 0) {
       document.getElementById('footer').style.display = 'flex';
@@ -438,7 +564,7 @@ loadTheme(() => {
       window.setTimeout(() => {
         button.classList.remove('is-shuffling');
         button.disabled = false;
-      }, 780);
+      }, SHUFFLE_ANIMATION_SETTLE_MS);
     });
   });
 });
@@ -446,6 +572,7 @@ loadTheme(() => {
 if (globalThis.chrome?.runtime?.onMessage) {
   chrome.runtime.onMessage.addListener((message) => {
     if (message.type === 'theme-changed') {
+      rememberThemePreference(message.theme, false);
       applyTheme(message.theme);
       updateAmbientGlow();
       renderCards(allBookmarks);

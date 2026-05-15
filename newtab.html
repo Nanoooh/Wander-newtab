@@ -5,34 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wander</title>
   <link rel="icon" href="icons/wander-mark.svg" type="image/svg+xml">
+  <script src="themes.js"></script>
+  <script src="preload-theme.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
 
     :root {
-      --canvas: #ffffff;
-      --canvas-ink: oklch(17% 0.013 72);
-      --ink-soft: oklch(35% 0.017 72 / 0.68);
-      --ink-faint: oklch(40% 0.014 72 / 0.44);
-      --paper: #ffffff;
-      --rule: oklch(33% 0.012 72 / 0.14);
-      --shadow: 0 18px 50px oklch(30% 0.014 72 / 0.10), 0 2px 8px oklch(30% 0.014 72 / 0.08);
+      --canvas: oklch(94% 0.021 78);
+      --canvas-ink: oklch(18% 0.027 65);
+      --ink-soft: oklch(36% 0.030 70 / 0.70);
+      --ink-faint: oklch(45% 0.026 75 / 0.46);
+      --paper: oklch(98% 0.018 83);
+      --rule: oklch(40% 0.024 70 / 0.16);
+      --shadow: 0 18px 50px oklch(33% 0.035 64 / 0.12), 0 3px 10px oklch(33% 0.035 64 / 0.08);
       --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
       --card-radius: 6px;
       --card-border: none;
       --brand-font: Georgia, "Times New Roman", serif;
       --display-font: Georgia, "Times New Roman", serif;
       --body-font: "Aptos", "Segoe UI", system-ui, sans-serif;
-      --layout-1: oklch(17% 0.013 72); --bg-1: #ffffff;
-      --layout-2: oklch(17% 0.013 72); --bg-2: #ffffff;
-      --layout-3: oklch(17% 0.013 72); --bg-3: #ffffff;
-      --layout-4: oklch(17% 0.013 72); --bg-4: #ffffff;
-      --layout-5: oklch(17% 0.013 72); --bg-5: #ffffff;
-      --layout-6: oklch(17% 0.013 72); --bg-6: #ffffff;
-      --layout-7: oklch(17% 0.013 72); --bg-7: #ffffff;
-      --layout-8: oklch(17% 0.013 72); --bg-8: #ffffff;
-      --layout-9: oklch(17% 0.013 72); --bg-9: #ffffff;
-      --layout-10: oklch(17% 0.013 72); --bg-10: #ffffff;
-      --layout-11: oklch(17% 0.013 72); --bg-11: #ffffff;
+      --layout-1: oklch(18% 0.027 65); --bg-1: oklch(98% 0.018 83);
+      --layout-2: oklch(18% 0.027 65); --bg-2: oklch(98% 0.018 83);
+      --layout-3: oklch(18% 0.027 65); --bg-3: oklch(98% 0.018 83);
+      --layout-4: oklch(18% 0.027 65); --bg-4: oklch(98% 0.018 83);
+      --layout-5: oklch(18% 0.027 65); --bg-5: oklch(98% 0.018 83);
+      --layout-6: oklch(18% 0.027 65); --bg-6: oklch(98% 0.018 83);
+      --layout-7: oklch(18% 0.027 65); --bg-7: oklch(98% 0.018 83);
+      --layout-8: oklch(18% 0.027 65); --bg-8: oklch(98% 0.018 83);
+      --layout-9: oklch(18% 0.027 65); --bg-9: oklch(98% 0.018 83);
+      --layout-10: oklch(18% 0.027 65); --bg-10: oklch(98% 0.018 83);
+      --layout-11: oklch(18% 0.027 65); --bg-11: oklch(98% 0.018 83);
     }
 
     /* Fallback font metric adjustment for blocked Google Fonts */
@@ -133,7 +135,7 @@
     .brand-name {
       font-family: var(--brand-font);
       font-size: clamp(26px, 3vw, 44px);
-      line-height: 0.86;
+      line-height: 1.05;
       letter-spacing: -0.035em;
       font-weight: 400;
       font-style: italic;
@@ -162,10 +164,19 @@
       perspective: 1000px;
     }
 
+    .board.is-preparing-enter .bookmark,
     .board.is-cutting .bookmark,
     .board.is-dealing .bookmark,
     .board.is-entering .bookmark {
       pointer-events: none;
+    }
+
+    .board.is-preparing-enter .bookmark {
+      opacity: 0;
+      transform:
+        translate3d(var(--drift-x, 0), 14px, 0)
+        rotate(var(--tilt, 0deg))
+        scale(var(--scale, 1));
     }
 
     .board.is-cutting .bookmark {
@@ -176,15 +187,27 @@
     }
 
     .board.is-dealing .bookmark {
-      animation: cardSweepDeal 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: cardDeal 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     .board.is-entering .bookmark {
       animation: cardEnter 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
+    .board.is-preparing-enter .bookmark,
+    .board.is-cutting .bookmark,
+    .board.is-dealing .bookmark,
+    .board.is-entering .bookmark,
+    .board.is-dealing .bm-bg-layer,
+    .board.is-entering .bm-bg-layer,
+    .board.is-dealing .bm-content-layer,
+    .board.is-entering .bm-content-layer {
+      will-change: transform, opacity, filter, clip-path;
+    }
+
     .bookmark {
       --card-bg: var(--paper);
+      --card-stagger: 0ms;
       position: relative;
       min-width: 0;
       min-height: 0;
@@ -244,7 +267,9 @@
 
     /* ---------- CORE ELEMENTS ---------- */
     .title {
-      font-size: 24px; font-weight: 600; line-height: 1.25;
+      --title-lines: var(--lines, 4);
+      --title-line-height: 1.25;
+      font-size: 24px; font-weight: 600; line-height: var(--title-line-height);
       max-width: 100%;
       font-family: var(--display-font);
       color: var(--canvas-ink);
@@ -252,8 +277,7 @@
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: var(--lines, 4);
-      max-height: calc(var(--lines, 4) * 1.25em);
+      -webkit-line-clamp: var(--title-lines);
       overflow-wrap: break-word;
       word-break: break-word;
       hyphens: auto;
@@ -312,12 +336,12 @@
     .l-magazine .top-half { height: 32%; background: color-mix(in oklch, var(--canvas-ink) 8%, transparent); position: relative; }
     .l-magazine .top-half .number { position: absolute; top: 16px; right: 16px; font-size: clamp(34px, 4vw, 48px); font-family: 'Playfair Display', serif; opacity: 0.2; }
     .l-magazine .bottom-half { padding: clamp(10px, 1.45vw, 24px); display: flex; flex-direction: column; height: 68%; min-height: 0; overflow: hidden; box-sizing: border-box; }
-    .l-magazine .title { font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
-    .bookmark.l-magazine[data-size="hero"] .title { -webkit-line-clamp: 2; }
-    .bookmark.l-magazine[data-size="wide"] .title { -webkit-line-clamp: 2; }
-    .bookmark.l-magazine[data-size="tall"] .title { -webkit-line-clamp: 3; }
-    .bookmark.l-magazine[data-size="small"] .title { -webkit-line-clamp: 2; }
-    .bookmark.l-magazine[data-size="strip"] .title { -webkit-line-clamp: 2; }
+    .l-magazine .title { font-family: 'Playfair Display', serif; font-weight: 600; --title-line-height: 1.22; }
+    .bookmark.l-magazine[data-size="hero"] .title { --title-lines: 2; }
+    .bookmark.l-magazine[data-size="wide"] .title { --title-lines: 2; }
+    .bookmark.l-magazine[data-size="tall"] .title { --title-lines: 3; }
+    .bookmark.l-magazine[data-size="small"] .title { --title-lines: 2; }
+    .bookmark.l-magazine[data-size="strip"] .title { --title-lines: 2; }
     .l-magazine .folder { margin-top: auto; opacity: 1; font-weight: 600; }
 
     .bookmark[data-size="small"] .l-magazine .top-half,
@@ -331,9 +355,9 @@
     .l-brutalist .bm-content-layer { padding: 24px; gap: 16px; }
     .l-brutalist .mid { flex-grow: 1; min-height: 0; overflow: hidden; display: flex; align-items: center; }
     .l-brutalist .title { font-weight: 800; text-transform: uppercase; padding: 0; }
-    .bookmark.l-brutalist[data-size="tall"] .title { -webkit-line-clamp: 3; }
-    .bookmark.l-brutalist[data-size="small"] .title { -webkit-line-clamp: 3; }
-    .bookmark.l-brutalist[data-size="strip"] .title { -webkit-line-clamp: 2; }
+    .bookmark.l-brutalist[data-size="tall"] .title { --title-lines: 3; }
+    .bookmark.l-brutalist[data-size="small"] .title { --title-lines: 3; }
+    .bookmark.l-brutalist[data-size="strip"] .title { --title-lines: 2; }
     .l-brutalist .top, .l-brutalist .bottom { display: flex; justify-content: space-between; font-weight: 600; }
 
     /* --- 8. Grid Bento --- */
@@ -354,11 +378,11 @@
 
     /* --- 9. Typographic Poster --- */
     .l-poster .bm-content-layer { padding: 24px; }
-    .l-poster .title { font-family: 'Bebas Neue', "PingFang SC", "Microsoft YaHei", sans-serif; font-size: clamp(38px, 6vw, 64px); line-height: 1.05; text-transform: uppercase; word-break: break-all; padding: 0.1em 0; }
+    .l-poster .title { font-family: 'Bebas Neue', "PingFang SC", "Microsoft YaHei", sans-serif; font-size: clamp(38px, 6vw, 64px); --title-line-height: 1.12; text-transform: uppercase; word-break: break-all; }
     .l-poster .meta { position: absolute; right: 16px; bottom: 24px; writing-mode: vertical-rl; display: flex; gap: 16px; }
 
     .bookmark[data-size="small"] .l-poster .title,
-    .bookmark[data-size="strip"] .l-poster .title { font-size: clamp(24px, 4vw, 36px); line-height: 1.1; }
+    .bookmark[data-size="strip"] .l-poster .title { font-size: clamp(24px, 4vw, 36px); --title-line-height: 1.14; }
     .bookmark[data-size="small"] .l-poster .meta,
     .bookmark[data-size="strip"] .l-poster .meta { right: 8px; bottom: 12px; gap: 8px; }
 
@@ -372,9 +396,9 @@
     .l-terminal .folder { opacity: 1; text-transform: none; letter-spacing: 0; margin-bottom: 16px; }
     .l-terminal .folder::before { content: "root@wander:~# cd "; opacity: 0.6; }
     .l-terminal .title { font-family: 'Space Mono', monospace; font-weight: 400; margin-bottom: clamp(8px, 1vw, 24px); line-height: 1.4; font-size: clamp(14px, 2vw, 18px); }
-    .bookmark.l-terminal[data-size="tall"] .title { -webkit-line-clamp: 4; }
-    .bookmark.l-terminal[data-size="small"] .title { -webkit-line-clamp: 3; }
-    .bookmark.l-terminal[data-size="strip"] .title { -webkit-line-clamp: 2; }
+    .bookmark.l-terminal[data-size="tall"] .title { --title-lines: 4; }
+    .bookmark.l-terminal[data-size="small"] .title { --title-lines: 3; }
+    .bookmark.l-terminal[data-size="strip"] .title { --title-lines: 2; }
     .l-terminal .title::before { content: "> "; opacity: 0.6; }
     .l-terminal .domain { opacity: 0.5; }
     .l-terminal .domain::before { content: "[LINK] "; }
@@ -382,11 +406,11 @@
     /* --- 13. Index Card --- */
     .l-index .bm-content-layer { padding: 18px 24px; background-image: repeating-linear-gradient(transparent, transparent 27px, color-mix(in oklch, var(--canvas-ink) 15%, transparent) 28px); border-radius: 2px; }
     .l-index .folder { font-family: 'Space Mono', monospace; margin-bottom: 24px; opacity: 1; display: inline-block; line-height: 1; }
-    .l-index .title { font-family: 'Caveat', "Kaiti SC", "STKaiti", cursive, serif; font-size: clamp(32px, 4vw, 42px); font-weight: 600; line-height: 1.35; padding: 0.1em 0; }
+    .l-index .title { font-family: 'Caveat', "Kaiti SC", "STKaiti", cursive, serif; font-size: clamp(32px, 4vw, 42px); font-weight: 600; --title-line-height: 1.36; }
     .l-index .bottom { margin-top: auto; font-family: 'Space Mono', monospace; font-size: 10px; opacity: 0.4; }
 
     .bookmark[data-size="small"] .l-index .title,
-    .bookmark[data-size="strip"] .l-index .title { font-size: clamp(18px, 2.5vw, 24px); line-height: 1.3; }
+    .bookmark[data-size="strip"] .l-index .title { font-size: clamp(18px, 2.5vw, 24px); --title-line-height: 1.32; }
     .bookmark[data-size="small"] .l-index .folder,
     .bookmark[data-size="strip"] .l-index .folder { margin-bottom: 12px; }
 
@@ -394,11 +418,11 @@
     .l-diagonal .bm-content-layer { padding: 0; }
     .l-diagonal .top-poly { height: 32%; background: var(--canvas-ink); color: var(--card-bg); padding: clamp(10px, 1.45vw, 20px); clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%); }
     .l-diagonal .title { font-weight: 800; }
-    .bookmark.l-diagonal[data-size="hero"] .title { -webkit-line-clamp: 2; font-size: clamp(28px, min(4vw, 7vh), 56px); line-height: 1.15; }
-    .bookmark.l-diagonal[data-size="wide"] .title { -webkit-line-clamp: 2; font-size: clamp(22px, min(2.8vw, 6vh), 44px); line-height: 1.15; }
-    .bookmark.l-diagonal[data-size="tall"] .title { -webkit-line-clamp: 2; font-size: clamp(20px, min(2.4vw, 5.5vh), 40px); line-height: 1.15; }
-    .bookmark.l-diagonal[data-size="small"] .title { -webkit-line-clamp: 2; }
-    .bookmark.l-diagonal[data-size="strip"] .title { -webkit-line-clamp: 2; }
+    .bookmark.l-diagonal[data-size="hero"] .title { --title-lines: 2; font-size: clamp(28px, min(4vw, 7vh), 56px); --title-line-height: 1.17; }
+    .bookmark.l-diagonal[data-size="wide"] .title { --title-lines: 2; font-size: clamp(22px, min(2.8vw, 6vh), 44px); --title-line-height: 1.17; }
+    .bookmark.l-diagonal[data-size="tall"] .title { --title-lines: 2; font-size: clamp(20px, min(2.4vw, 5.5vh), 40px); --title-line-height: 1.17; }
+    .bookmark.l-diagonal[data-size="small"] .title { --title-lines: 2; }
+    .bookmark.l-diagonal[data-size="strip"] .title { --title-lines: 2; }
     .l-diagonal .top-poly .number { color: var(--card-bg); font-size: clamp(14px, 2.5vh, 24px); font-weight: 800; opacity: 1; line-height: 1; }
     .l-diagonal .bottom-poly { padding: clamp(8px, 1.2vw, 18px); display: flex; flex-direction: column; justify-content: flex-start; flex-grow: 1; min-height: 0; overflow: hidden; }
 
@@ -407,35 +431,35 @@
     /* Override sizing constraints for certain layouts */
     .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
       font-size: clamp(34px, min(5.6vw, 9vh), 84px);
-      line-height: 1.15;
+      --title-line-height: 1.16;
       letter-spacing: -0.052em;
-      -webkit-line-clamp: 3;
+      --title-lines: 3;
     }
 
     .bookmark[data-size="wide"] .title {
       font-size: clamp(25px, min(3.2vw, 6.5vh), 54px);
-      line-height: 1.2;
+      --title-line-height: 1.2;
       letter-spacing: -0.043em;
     }
 
     .bookmark[data-size="tall"] .title {
       font-size: clamp(23px, min(2.8vw, 6vh), 46px);
-      line-height: 1.2;
+      --title-line-height: 1.2;
       letter-spacing: -0.038em;
     }
 
     .bookmark[data-size="small"] .title {
       font-size: clamp(14px, min(1.8vw, 4vh), 24px);
-      line-height: 1.25;
+      --title-line-height: 1.25;
       letter-spacing: -0.03em;
-      -webkit-line-clamp: 4;
+      --title-lines: 4;
     }
 
     .bookmark[data-size="strip"] .title {
       font-size: clamp(14px, min(2vw, 5vh), 28px);
-      line-height: 1.1;
+      --title-line-height: 1.14;
       letter-spacing: -0.032em;
-      -webkit-line-clamp: 2;
+      --title-lines: 2;
     }
 
     /* Spread layouts */
@@ -523,12 +547,12 @@
     .spread-l .slot-4 { grid-column: 10 / 13; grid-row: 4 / 7; }
     .spread-l .slot-5 { grid-column: 10 / 13; grid-row: 7 / 9; }
 
-    .slot-0, .slot-0 .bm-bg-layer, .slot-0 .bm-content-layer { animation-delay: 40ms; }
-    .slot-1, .slot-1 .bm-bg-layer, .slot-1 .bm-content-layer { animation-delay: 120ms; }
-    .slot-2, .slot-2 .bm-bg-layer, .slot-2 .bm-content-layer { animation-delay: 200ms; }
-    .slot-3, .slot-3 .bm-bg-layer, .slot-3 .bm-content-layer { animation-delay: 280ms; }
-    .slot-4, .slot-4 .bm-bg-layer, .slot-4 .bm-content-layer { animation-delay: 360ms; }
-    .slot-5, .slot-5 .bm-bg-layer, .slot-5 .bm-content-layer { animation-delay: 440ms; }
+    .slot-0 { --card-stagger: 0ms; }
+    .slot-1 { --card-stagger: 40ms; }
+    .slot-2 { --card-stagger: 80ms; }
+    .slot-3 { --card-stagger: 120ms; }
+    .slot-4 { --card-stagger: 160ms; }
+    .slot-5 { --card-stagger: 200ms; }
 
     .footline {
       display: flex;
@@ -653,7 +677,6 @@
     html[data-theme-type="flip"] .board.is-dealing .bookmark .bm-content-layer,
     html[data-theme-type="flip"] .board.is-entering .bookmark .bm-content-layer {
       animation: flipContent 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
-      animation-delay: 100ms; /* Offset content flip */
     }
     @keyframes flipBg {
       from { transform: perspective(1000px) rotateY(-90deg); opacity: 0; }
@@ -756,6 +779,20 @@
     @keyframes splitContent {
       0% { opacity: 0; filter: blur(8px); transform: scale(1.1); }
       100% { opacity: 1; filter: blur(0); transform: scale(1); }
+    }
+
+    .board.is-dealing .bookmark,
+    .board.is-entering .bookmark,
+    html[data-theme-type] .board.is-dealing .bookmark .bm-bg-layer,
+    html[data-theme-type] .board.is-entering .bookmark .bm-bg-layer,
+    html[data-theme-type] .board.is-dealing .bookmark .bm-content-layer,
+    html[data-theme-type] .board.is-entering .bookmark .bm-content-layer {
+      animation-delay: var(--card-stagger) !important;
+    }
+
+    html[data-theme-type="flip"] .board.is-dealing .bookmark .bm-content-layer,
+    html[data-theme-type="flip"] .board.is-entering .bookmark .bm-content-layer {
+      animation-delay: calc(var(--card-stagger) + 70ms) !important;
     }
 
 
@@ -917,7 +954,7 @@
         padding: clamp(10px, 1.2vw, 20px) clamp(10px, 1.2vw, 20px) clamp(14px, 1.5vw, 26px);
       }
       .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
-        -webkit-line-clamp: 2;
+        --title-lines: 2;
       }
       .board {
         gap: clamp(6px, min(0.9vw, 0.9vh), 12px);
@@ -956,24 +993,24 @@
 
       .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
         font-size: clamp(28px, 4.5vw, 64px);
-        -webkit-line-clamp: 2;
-        line-height: 1.1;
+        --title-lines: 2;
+        --title-line-height: 1.14;
       }
       .bookmark[data-size="wide"] .title {
         font-size: clamp(20px, 2.6vw, 40px);
-        line-height: 1.15;
+        --title-line-height: 1.17;
       }
       .bookmark[data-size="tall"] .title {
         font-size: clamp(18px, 2.2vw, 36px);
-        line-height: 1.15;
+        --title-line-height: 1.17;
       }
       .bookmark[data-size="small"] .title {
         font-size: clamp(12px, 1.4vw, 20px);
-        -webkit-line-clamp: 3;
+        --title-lines: 3;
       }
       .bookmark[data-size="strip"] .title {
         font-size: clamp(12px, 1.6vw, 24px);
-        -webkit-line-clamp: 2;
+        --title-lines: 2;
       }
       .title { font-size: 20px; }
       .l-poster .title { font-size: clamp(28px, 4.5vw, 48px); }
@@ -1022,26 +1059,26 @@
 
       .bookmark[data-size="hero"] .title:not(.l-poster .title, .l-index .title) {
         font-size: clamp(22px, 3.5vw, 48px);
-        -webkit-line-clamp: 2;
-        line-height: 1.08;
+        --title-lines: 2;
+        --title-line-height: 1.13;
       }
       .bookmark[data-size="wide"] .title {
         font-size: clamp(16px, 2vw, 32px);
-        line-height: 1.1;
+        --title-line-height: 1.13;
       }
       .bookmark[data-size="tall"] .title {
         font-size: clamp(15px, 1.8vw, 28px);
-        line-height: 1.1;
+        --title-line-height: 1.13;
       }
       .bookmark[data-size="small"] .title {
         font-size: clamp(11px, 1.2vw, 17px);
-        -webkit-line-clamp: 3;
-        line-height: 1.2;
+        --title-lines: 3;
+        --title-line-height: 1.22;
       }
       .bookmark[data-size="strip"] .title {
         font-size: clamp(11px, 1.4vw, 20px);
-        -webkit-line-clamp: 2;
-        line-height: 1.1;
+        --title-lines: 2;
+        --title-line-height: 1.13;
       }
       .title { font-size: 16px; }
       .folder, .domain, .number { font-size: 8px !important; }
@@ -1113,9 +1150,9 @@
       .bookmark[data-size="small"] .title,
       .bookmark[data-size="strip"] .title {
         font-size: clamp(28px, 11vw, 46px);
-        line-height: 0.96;
+        --title-line-height: 1.12;
         letter-spacing: -0.044em;
-        -webkit-line-clamp: 3;
+        --title-lines: 3;
       }
 
       .footline {
@@ -1159,6 +1196,7 @@
       *::before,
       *::after {
         animation-duration: 1ms !important;
+        animation-delay: 0ms !important;
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 1ms !important;
@@ -1269,7 +1307,6 @@
       </button>
     </footer>
   </main>
-  <script src="themes.js"></script>
   <script src="newtab.js"></script>
 </body>
 </html>

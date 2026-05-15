@@ -4,11 +4,11 @@ const THEMES = {
     name: 'Wander Classic',
     scheme: 'light', layout: 'l-classic',
     type: 'slice',
-    preview: ['#F2E8D0', '#2D5A3D', '#A07850', '#B0B8D0', '#6A9AB0', '#C8A870'],
+    preview: ['oklch(94% 0.021 78)', '#2D5A3D', '#A07850', '#B0B8D0', '#6A9AB0', '#C8A870'],
     fonts: { display: 'Georgia, "Times New Roman", serif', body: '"Aptos", "Segoe UI", system-ui, sans-serif' },
     fontUrls: [],
     palette: ['oklch(82% 0.086 87)', 'oklch(45% 0.071 139)', 'oklch(74% 0.058 21)', 'oklch(84% 0.057 263)', 'oklch(69% 0.047 191)', 'oklch(78% 0.056 57)'],
-    cssVars: { '--canvas': '#ffffff', '--canvas-ink': 'oklch(17% 0.013 72)', '--ink-soft': 'oklch(35% 0.017 72 / 0.68)', '--ink-faint': 'oklch(40% 0.014 72 / 0.44)', '--paper': '#ffffff', '--rule': 'oklch(33% 0.012 72 / 0.14)', '--shadow': '0 18px 50px oklch(30% 0.014 72 / 0.10), 0 2px 8px oklch(30% 0.014 72 / 0.08)', '--card-radius': '6px', '--card-border': 'none' },
+    cssVars: { '--canvas': 'oklch(94% 0.021 78)', '--canvas-ink': 'oklch(18% 0.027 65)', '--ink-soft': 'oklch(36% 0.030 70 / 0.70)', '--ink-faint': 'oklch(45% 0.026 75 / 0.46)', '--paper': 'oklch(98% 0.018 83)', '--rule': 'oklch(40% 0.024 70 / 0.16)', '--shadow': '0 18px 50px oklch(33% 0.035 64 / 0.12), 0 3px 10px oklch(33% 0.035 64 / 0.08)', '--card-radius': '6px', '--card-border': 'none' },
   },
 
   /* ===== Light — Soft / Elegant ===== */

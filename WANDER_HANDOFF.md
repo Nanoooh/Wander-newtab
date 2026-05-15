@@ -6,7 +6,7 @@ Wander 是一个高保真、多主题的 Chrome New Tab 插件。它通过 Chrom
 
 - **Resurface**: 将沉睡在书签栏深处的链接带回视野。
 - **Editorial**: 模仿纸质媒体的版面设计，强调比例、节奏和留白。
-- **Variety**: 提供 28 套截然不同的视觉主题，涵盖从古典报刊到极简主义，再到复古 Windows 等多种风格。
+- **Variety**: 提供 26 套截然不同的视觉主题，涵盖从古典报刊到极简主义，再到复古 Windows 等多种风格。
 
 ---
 
@@ -19,7 +19,7 @@ Wander-newtab-v2/
 ├── manifest.json         # 插件配置文件 (V3)，声明权限与入口
 ├── newtab.html           # 新标签页主结构与全量 CSS 样式（含 11 种卡片布局）
 ├── newtab.js             # 核心逻辑：书签抽取、布局匹配、动效编排
-├── themes.js             # 静态数据：定义 28 套主题的颜色、字体、动效类型
+├── themes.js             # 静态数据：定义 26 套主题的颜色、字体、动效类型
 ├── popup.html / .js      # 插件工具栏弹窗：主题切换、随机模式控制
 ├── layout-playground.html # 开发辅助：布局系统压力测试与预览
 ├── transition-playground.html # 开发辅助：动画效果调试工具
