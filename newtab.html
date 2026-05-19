@@ -52,6 +52,9 @@
     @font-face { font-family: "Jost Fallback"; src: local("system-ui"); size-adjust: 96%; }
     @font-face { font-family: "Caveat Fallback"; src: local("Segoe Script"); size-adjust: 100%; }
     @font-face { font-family: "Work Sans Fallback"; src: local("system-ui"); size-adjust: 97%; }
+    @font-face { font-family: "Clash Display Fallback"; src: local("Arial Black"); size-adjust: 92%; }
+    @font-face { font-family: "Cabinet Grotesk Fallback"; src: local("system-ui"); size-adjust: 98%; }
+    @font-face { font-family: "Satoshi Fallback"; src: local("system-ui"); size-adjust: 98%; }
 
     html {
       min-height: 100%;
@@ -425,6 +428,13 @@
     .bookmark.l-diagonal[data-size="strip"] .title { --title-lines: 2; }
     .l-diagonal .top-poly .number { color: var(--card-bg); font-size: clamp(14px, 2.5vh, 24px); font-weight: 800; opacity: 1; line-height: 1; }
     .l-diagonal .bottom-poly { padding: clamp(8px, 1.2vw, 18px); display: flex; flex-direction: column; justify-content: flex-start; flex-grow: 1; min-height: 0; overflow: hidden; }
+
+    html[data-theme="creative-mode"] .title,
+    html[data-theme="creative-mode"] .site-mark,
+    html[data-theme="coral"] .title,
+    html[data-theme="coral"] .site-mark {
+      letter-spacing: 0 !important;
+    }
 
     /* Removed Swiss Grid */
 
